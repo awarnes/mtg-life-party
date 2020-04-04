@@ -26,9 +26,16 @@ export interface HomeProps {
   joinRoom: (player: Player, roomToJoinId: string) => void;
 }
 
-export interface RoomState {
+export interface RoomProps {
   roomId?: string;
   players: Array<Player>;
+  increaseLife: () => void;
+  reduceLife: () => void;
+}
+
+export interface AppState {
+  roomId?: string;
+  currentPlayer: Player;
 }
 
 // Enumerations
