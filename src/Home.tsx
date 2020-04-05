@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -21,7 +21,7 @@ export enum CreatePlayerField {
 }
 
 class Home extends Component<HomeProps, HomeState> {
-  constructor(props: any) {
+  constructor(props: HomeProps) {
     super(props);
 
     this.state = {
@@ -29,10 +29,13 @@ class Home extends Component<HomeProps, HomeState> {
       joinModal: false,
       addingPartner: false,
       player: {
+        uid: '',
         name: '',
         commander: '',
         partnerCommander: '',
         life: 40,
+        poisonCounters: 0,
+        commanderDamage: [],
       },
       roomToJoinId: '',
     };
@@ -44,10 +47,13 @@ class Home extends Component<HomeProps, HomeState> {
 
   clearPlayerData = (): void => {
     const clearedPlayer = {
+      uid: '',
       name: '',
       commander: '',
       partnerCommander: '',
       life: 40,
+      poisonCounters: 0,
+      commanderDamage: [],
     };
 
     this.setState({ player: clearedPlayer, addingPartner: false });
@@ -57,7 +63,7 @@ class Home extends Component<HomeProps, HomeState> {
     this.setState({ joinModal: !this.state.joinModal });
   };
 
-  handleUpdatePlayer = (field: CreatePlayerField, event: any): void => {
+  handleUpdatePlayer = (field: CreatePlayerField, event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const { player } = this.state;
     const newPlayer = Object.assign({}, player, { [field]: event.target.value });
     this.setState({ player: newPlayer });
@@ -73,7 +79,7 @@ class Home extends Component<HomeProps, HomeState> {
     this.setState({ player: newPlayer, addingPartner: false });
   };
 
-  handleRoomToJoinIdChange = (event: any): void => {
+  handleRoomToJoinIdChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     this.setState({ roomToJoinId: event.target.value });
   };
 
@@ -89,7 +95,7 @@ class Home extends Component<HomeProps, HomeState> {
     this.props.joinRoom(player, roomToJoinId);
   };
 
-  createPlayer = (focus: boolean): any => {
+  createPlayer = (focus: boolean): JSX.Element => {
     const { player, addingPartner } = this.state;
 
     return (
@@ -141,7 +147,7 @@ class Home extends Component<HomeProps, HomeState> {
     );
   };
 
-  render() {
+  render(): JSX.Element {
     const { newModal, joinModal, roomToJoinId } = this.state;
 
     return (

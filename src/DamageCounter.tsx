@@ -8,36 +8,36 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { DamageCounterProps } from './mtgLifeTypeHelpers';
 
-const counterStyles = makeStyles({
-  reduceButton: {
-    position: 'absolute',
-    width: '50%',
-    height: '100%',
-    top: 0,
-    left: 0,
-    textAlign: 'center',
-  },
-  increaseButton: {
-    position: 'absolute',
-    width: '50%',
-    height: '100%',
-    top: 0,
-    left: '50%',
-    textAlign: 'center',
-  },
-  countTotal: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 10000,
-    height: '50%',
-  },
-});
-
 function DamageCounter(props: DamageCounterProps): JSX.Element {
-  const classes = counterStyles();
-  const { damageCount, increaseDamageCount, decreaseDamageCount, counterColors } = props;
+  const { playerId, damageCount, increaseDamageCount, decreaseDamageCount, counterColors, counterSize } = props;
+
+  const classes = makeStyles((theme) => ({
+    decreaseButton: {
+      position: 'absolute',
+      width: '50%',
+      height: '100%',
+      top: 0,
+      left: 0,
+      textAlign: 'center',
+    },
+    increaseButton: {
+      position: 'absolute',
+      width: '50%',
+      height: '100%',
+      top: 0,
+      left: '50%',
+      textAlign: 'center',
+    },
+    countTotal: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: 10000,
+      height: theme.spacing(counterSize),
+      width: theme.spacing(counterSize),
+    },
+  }))();
 
   // Temp Health Tooltip State
   const baseTempChangeTimer = 2000;
@@ -74,30 +74,35 @@ function DamageCounter(props: DamageCounterProps): JSX.Element {
     return (): void => clearInterval(interval);
   }, [tempChangeActive, tempChangeMS, resetTempChange]);
 
-  const handleReduceClick = (): void => {
+  const handleDecreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage - 1);
-    decreaseDamageCount();
+    decreaseDamageCount(playerId);
     startTempChange();
   };
 
   const handleIncreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage + 1);
-    increaseDamageCount();
+    increaseDamageCount(playerId);
     startTempChange();
   };
 
   return (
     <div>
-      <IconButton className={classes.reduceButton} onClick={handleReduceClick}>
+      <IconButton className={classes.decreaseButton} onClick={handleDecreaseClick}>
         <RemoveIcon />
       </IconButton>
       <IconButton className={classes.increaseButton} onClick={handleIncreaseClick}>
         <AddIcon />
       </IconButton>
-      <Tooltip title={tempChange >= 0 ? `+${tempChange}` : tempChange} placement={tempChange < 0 ? 'left' : 'right'} open={tempChangeActive} arrow>
-        <Avatar className={classes.countTotal} style={counterColors}>
+      <Tooltip
+        title={tempChange >= 0 ? `+${tempChange}` : tempChange}
+        placement={tempChange < 0 ? 'left' : 'right'}
+        open={tempChangeActive && tempChange !== 0}
+        arrow
+      >
+        <Avatar aria-label={`current count is ${damageCount}`} className={classes.countTotal} style={counterColors}>
           {damageCount}
         </Avatar>
       </Tooltip>

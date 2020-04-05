@@ -7,11 +7,8 @@ import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/CardActionArea';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
-import Typography from '@material-ui/core/Typography';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Fab from '@material-ui/core/Fab';
+import Grid from '@material-ui/core/Grid';
 // Icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BrushIcon from '@material-ui/icons/Brush';
@@ -19,6 +16,7 @@ import CloseIcon from '@material-ui/icons/Close';
 // MTG Life Party
 import { colorStyles, PlayerCardProps } from './mtgLifeTypeHelpers';
 import DamageCounter from './DamageCounter';
+import AdditionalDamageExpander from './AdditionalDamageExpander';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 
@@ -26,10 +24,6 @@ const useStyles = makeStyles({
   lifeCounterContainer: {
     position: 'relative',
     minHeight: '75pt',
-  },
-  commanderDamageContainer: {
-    position: 'relative',
-    minHeight: '30pt',
   },
 });
 
@@ -42,7 +36,16 @@ function getGathererURL(commanderName: string): string {
 function PlayerCard(props: PlayerCardProps): JSX.Element {
   // Styling and Props
   const classes: any = useStyles();
-  const { player, reduceLife, increaseLife } = props;
+  const {
+    player,
+    decreaseLife,
+    increaseLife,
+    decreasePoisonCounters,
+    increasePoisonCounters,
+    decreaseCommanderDamage,
+    increaseCommanderDamage,
+    createNewCommanderDamage,
+  } = props;
 
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -61,12 +64,12 @@ function PlayerCard(props: PlayerCardProps): JSX.Element {
     <Card>
       <CardHeader
         avatar={
-          <Avatar aria-label="Player Name" style={colorStyles[cardColor]}>
+          <Avatar aria-label="player name" style={colorStyles[cardColor]}>
             {player.name[0].toUpperCase()}
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings" onClick={handleSettingsToggle}>
+          <IconButton aria-label="color settings" onClick={handleSettingsToggle}>
             {settingsOpen ? <CloseIcon /> : <MoreVertIcon />}
           </IconButton>
         }
@@ -96,32 +99,37 @@ function PlayerCard(props: PlayerCardProps): JSX.Element {
       {settingsOpen ? (
         <div>
           <CardContent>
-            {colors.map((colorChoice: string) => (
-              <Fab key={colorChoice} style={colorStyles[colorChoice]} onClick={(): void => handleSetColor(colorChoice)}>
-                <BrushIcon />
-              </Fab>
-            ))}
+            <Grid container spacing={4} justify="center" alignItems="center" alignContent="center">
+              {colors.map((colorChoice: string) => (
+                <Grid key={colorChoice} item>
+                  <Fab style={colorStyles[colorChoice]} onClick={(): void => handleSetColor(colorChoice)}>
+                    <BrushIcon />
+                  </Fab>
+                </Grid>
+              ))}
+            </Grid>
           </CardContent>
         </div>
       ) : (
         <div>
           <CardContent className={classes.lifeCounterContainer}>
             <DamageCounter
+              playerId={player.uid}
               damageCount={player.life}
+              decreaseDamageCount={decreaseLife}
               increaseDamageCount={increaseLife}
-              decreaseDamageCount={reduceLife}
               counterColors={colorStyles[cardColor]}
+              counterSize={10}
             />
           </CardContent>
-
-          <ExpansionPanel>
-            <ExpansionPanelSummary>
-              <Typography>Summary for Panel</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <Typography>Details for Panel</Typography>
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
+          <AdditionalDamageExpander
+            player={player}
+            decreasePoisonCounters={decreasePoisonCounters}
+            increasePoisonCounters={increasePoisonCounters}
+            decreaseCommanderDamage={decreaseCommanderDamage}
+            increaseCommanderDamage={increaseCommanderDamage}
+            createNewCommanderDamage={createNewCommanderDamage}
+          />
         </div>
       )}
     </Card>
