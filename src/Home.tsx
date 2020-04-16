@@ -10,9 +10,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Grid from '@material-ui/core/Grid';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
-
-import { HomeState, HomeProps } from './mtgLifeTypeHelpers';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { IHomeState, IHomeProps } from './lib/mtgLifeInterfaces';
 
 export enum CreatePlayerField {
   name = 'name',
@@ -20,8 +19,8 @@ export enum CreatePlayerField {
   partnerCommander = 'partnerCommander',
 }
 
-class Home extends Component<HomeProps, HomeState> {
-  constructor(props: HomeProps) {
+class Home extends Component<IHomeProps, IHomeState> {
+  constructor(props: IHomeProps) {
     super(props);
 
     this.state = {

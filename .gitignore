@@ -11,6 +11,9 @@
 # production
 /build
 
+# Secrets
+src/data/firebaseSecrets.js
+
 # misc
 .DS_Store
 .env.local

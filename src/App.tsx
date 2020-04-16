@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Home from './Home';
 import Room from './Room';
-import { AppState, Player, CommanderDamage } from './mtgLifeTypeHelpers';
+import { IAppState, IPlayer, ICommanderDamage } from './lib/mtgLifeInterfaces';
 
-class App extends Component<{}, AppState> {
+class App extends Component<{}, IAppState> {
   constructor(props: any) {
     super(props);
 
@@ -24,13 +24,13 @@ class App extends Component<{}, AppState> {
     };
   }
 
-  createRoom = (player: Player): void => {
+  createRoom = (player: IPlayer): void => {
     console.log('Creating the room with this player: ', player);
     // Firebase.createRoom()
     // .then(roomId => this.joinRoom(player, roomId))
   };
 
-  joinRoom = (player: Player, roomToJoinId: string): void => {
+  joinRoom = (player: IPlayer, roomToJoinId: string): void => {
     console.log(`Joining room (${roomToJoinId})with this player: ${player}`);
   };
 

@@ -7,12 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import { lightGreen, common } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import DamageCounter from './DamageCounter';
-import { AdditionalDamageExpanderProps } from './mtgLifeTypeHelpers';
+import { IAdditionalDamageExpanderProps } from './lib/mtgLifeInterfaces';
 
 const useStyles = makeStyles({
   poisonCountersContainer: {
@@ -22,12 +23,24 @@ const useStyles = makeStyles({
   },
 });
 
-function AdditionalDamageExpander(props: AdditionalDamageExpanderProps): JSX.Element {
-  const { player, decreasePoisonCounters, increasePoisonCounters, decreaseCommanderDamage, increaseCommanderDamage, createNewCommanderDamage } = props;
+function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.Element {
+  const {
+    player,
+    decreasePoisonCounters,
+    increasePoisonCounters,
+    decreaseCommanderDamage,
+    increaseCommanderDamage,
+    createNewCommanderDamage,
+  } = props;
   const classes = useStyles();
+
   return (
     <ExpansionPanel>
-      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} aria-controls="additional-damage-content" id="additional-damage-header">
+      <ExpansionPanelSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="additional-damage-content"
+        id="additional-damage-header"
+      >
         <Typography variant="body1">Additional Damage</Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
@@ -55,12 +68,11 @@ function AdditionalDamageExpander(props: AdditionalDamageExpanderProps): JSX.Ele
         <FormControl className={classes.formControl}>
           <InputLabel id="new-commander-select-label">Age</InputLabel>
           <Select labelId="new-commander-select-label" id="new-commander-select" value={0} onChange={console.log}>
-            {
-              // Figure out how to make this fucking work.
-              // I really don't want to pass the entire players object through to here.
-              // Maybe we could create a local variable to the room (a list of commander names)
-              // then send that list through to here.
-            }
+            {roomCommanders.map((commander) => (
+              <MenuItem key={commander} value={commander}>
+                {commander}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </ExpansionPanelDetails>

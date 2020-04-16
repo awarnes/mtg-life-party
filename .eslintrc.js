@@ -14,5 +14,13 @@ module.exports = {
     react: {
       version: "detect"
     }
+  },
+  rules: {
+    "@typescript-eslint/interface-name-prefix": [
+      "error",
+      {
+        "prefixWithI": "always"
+      }
+    ]
   }
 };

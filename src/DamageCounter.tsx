@@ -6,9 +6,9 @@ import Avatar from '@material-ui/core/Avatar';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
-import { DamageCounterProps } from './mtgLifeTypeHelpers';
+import { IDamageCounterProps } from './lib/mtgLifeInterfaces';
 
-function DamageCounter(props: DamageCounterProps): JSX.Element {
+function DamageCounter(props: IDamageCounterProps): JSX.Element {
   const { playerId, damageCount, increaseDamageCount, decreaseDamageCount, counterColors, counterSize } = props;
 
   const classes = makeStyles((theme) => ({

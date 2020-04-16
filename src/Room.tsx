@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { RoomProps } from './mtgLifeTypeHelpers';
+import { IRoomProps } from './lib/mtgLifeInterfaces';
 import PlayerCard from './PlayerCard';
 
-class Room extends Component<RoomProps> {
+class Room extends Component<IRoomProps> {
   render(): JSX.Element {
     const {
       players,

@@ -1,42 +1,41 @@
-import { red, orange, yellow, teal, lightBlue, indigo, deepPurple, common } from '@material-ui/core/colors';
-
 // Interfaces
-export interface AppState {
+export interface IAppState {
   roomId?: string;
-  players: Array<Player>;
+  players: Array<IPlayer>;
 }
 
-export interface Player {
-  uid: string;
+export interface IPlayer {
+  uid?: string;
   name: string;
   life: number;
   commander: string;
   partnerCommander?: string;
-  commanderDamage: Array<CommanderDamage>;
-  poisonCounters: number;
+  commanderDamage?: Array<ICommanderDamage>;
+  poisonCounters?: number;
+  colorTheme?: string;
 }
 
-export interface CommanderDamage {
+export interface ICommanderDamage {
   name: string;
   amount: number;
 }
 
-export interface HomeState {
+export interface IHomeState {
   newModal: boolean;
   joinModal: boolean;
   addingPartner: boolean;
-  player: Player;
+  player: IPlayer;
   roomToJoinId: string;
 }
 
-export interface HomeProps {
-  createRoom: (player: Player) => void;
-  joinRoom: (player: Player, roomToJoinId: string) => void;
+export interface IHomeProps {
+  createRoom: (player: IPlayer) => void;
+  joinRoom: (player: IPlayer, roomToJoinId: string) => void;
 }
 
-export interface RoomProps {
+export interface IRoomProps {
   roomId?: string;
-  players: Array<Player>;
+  players: Array<IPlayer>;
   decreaseLife: (playerId?: string) => void;
   increaseLife: (playerId?: string) => void;
   decreasePoisonCounters: (playerId?: string) => void;
@@ -46,8 +45,8 @@ export interface RoomProps {
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
 }
 
-export interface PlayerCardProps {
-  player: Player;
+export interface IPlayerCardProps {
+  player: IPlayer;
   increaseLife: () => void;
   decreaseLife: () => void;
   decreasePoisonCounters: (playerId?: string) => void;
@@ -57,18 +56,18 @@ export interface PlayerCardProps {
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
 }
 
-export interface DamageCounterProps {
+export interface IDamageCounterProps {
   playerId: string;
   damageCount: number;
   // counterFocus: CounterFocus; See below, probably not needed.
   increaseDamageCount: (playerId: string, commanderName?: string) => void;
   decreaseDamageCount: (playerId: string, commanderName?: string) => void;
   counterSize: number;
-  counterColors: CounterColors;
+  counterColors: ICounterColors;
 }
 
-export interface AdditionalDamageExpanderProps {
-  player: Player;
+export interface IAdditionalDamageExpanderProps {
+  player: IPlayer;
   decreasePoisonCounters: (playerId?: string) => void;
   increasePoisonCounters: (playerId?: string) => void;
   decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
@@ -76,47 +75,7 @@ export interface AdditionalDamageExpanderProps {
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
 }
 
-export interface CounterColors {
+export interface ICounterColors {
   color: string;
   backgroundColor: string;
 }
-
-// Is this even needed?
-// Maybe needed for the commander damage to try to keep things as generalized as possible?
-// export const CounterFocus = {
-//   life: 'life',
-//   poison: 'poisonCounters',
-//   commander: (commanderName: string): string => commanderName,
-// };
-
-// Constants
-export const colorStyles: any = {
-  red: {
-    color: common.white,
-    backgroundColor: red[500],
-  },
-  orange: {
-    color: common.black,
-    backgroundColor: orange[500],
-  },
-  yellow: {
-    color: common.black,
-    backgroundColor: yellow[500],
-  },
-  green: {
-    color: common.white,
-    backgroundColor: teal[500],
-  },
-  blue: {
-    color: common.black,
-    backgroundColor: lightBlue[500],
-  },
-  indigo: {
-    color: common.white,
-    backgroundColor: indigo[500],
-  },
-  violet: {
-    color: common.white,
-    backgroundColor: deepPurple[500],
-  },
-};

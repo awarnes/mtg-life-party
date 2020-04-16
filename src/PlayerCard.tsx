@@ -14,7 +14,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BrushIcon from '@material-ui/icons/Brush';
 import CloseIcon from '@material-ui/icons/Close';
 // MTG Life Party
-import { colorStyles, PlayerCardProps } from './mtgLifeTypeHelpers';
+import { IPlayerCardProps } from './lib/mtgLifeInterfaces';
+import { colorStyles } from './lib/mtgLifeConstants';
 import DamageCounter from './DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
 
@@ -30,10 +31,12 @@ const useStyles = makeStyles({
 function getGathererURL(commanderName: string): string {
   const searchArray = commanderName.replace(/[^\w\s]/g, '').split(' ');
 
-  return `https://gatherer.wizards.com/Pages/Search/Default.aspx?name=${searchArray.map((term: string): string => `|[${term}]`).join('')}`;
+  return `https://gatherer.wizards.com/Pages/Search/Default.aspx?name=${searchArray
+    .map((term: string): string => `|[${term}]`)
+    .join('')}`;
 }
 
-function PlayerCard(props: PlayerCardProps): JSX.Element {
+function PlayerCard(props: IPlayerCardProps): JSX.Element {
   // Styling and Props
   const classes: any = useStyles();
   const {
