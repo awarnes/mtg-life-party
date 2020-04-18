@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import { IRoomProps } from '../lib/mtgLifeInterfaces';
 import { listenToPlayersInRoom } from '../data/connection';
 import PlayerCard from './PlayerCard';
+
+const styles = {
+  roomContainer: {
+    marginTop: '15%',
+  },
+};
 
 class Room extends Component<IRoomProps> {
   playerListener!: any;
@@ -28,10 +35,11 @@ class Room extends Component<IRoomProps> {
       decreaseCommanderDamage,
       increaseCommanderDamage,
       createNewCommanderDamage,
+      classes,
     } = this.props;
 
     return (
-      <div>
+      <div className={classes.roomContainer}>
         {players.map((player) => (
           <PlayerCard
             key={player.uid}
@@ -50,4 +58,4 @@ class Room extends Component<IRoomProps> {
   }
 }
 
-export default Room;
+export default withStyles(styles)(Room);

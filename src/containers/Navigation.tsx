@@ -1,54 +1,30 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import NavBar from '../components/NavBar';
-import NavDrawer from '../components/NavDrawer';
+// import NavDrawer from '../components/NavDrawer';
 
-class Navigation extends Component {
-  handleNavAuth = () => {
-    const { user, logIn, logOut } = this.props;
+import { INavigationProps } from '../lib/mtgLifeInterfaces';
 
-    if (user) {
-      logOut();
-    } else {
-      logIn();
-    }
+const styles = {
+  navContainer: {
+    height: '10%',
+  },
+};
+
+class Navigation extends Component<INavigationProps, {}> {
+  returnHome = (): void => {
+    this.props.history.push('/');
   };
 
-  getCurrentScreen = (location) => {
-    return location.pathname.replace('/', '').toUpperCase();
-  };
+  render(): JSX.Element {
+    const { roomShortId, classes } = this.props;
 
-  render() {
-    const { user, toggleNavDrawer, navOpen, history, location } = this.props;
-    const currentScreen = this.getCurrentScreen(location);
     return (
       <div>
-        <NavBar
-          user={user}
-          toggleNavDrawer={toggleNavDrawer}
-          handleNavAuth={this.handleNavAuth}
-          currentScreen={currentScreen}
-        />
-        <NavDrawer
-          user={user}
-          navOpen={navOpen}
-          history={history}
-          toggleNavDrawer={toggleNavDrawer}
-          handleNavAuth={this.handleNavAuth}
-        />
+        <NavBar returnHome={this.returnHome} currentRoom={roomShortId} />
       </div>
     );
   }
 }
 
-Navigation.propTypes = {
-  user: PropTypes.object,
-  toggleNavDrawer: PropTypes.func,
-  navOpen: PropTypes.bool,
-  history: PropTypes.object,
-  location: PropTypes.object,
-  logIn: PropTypes.func,
-  logOut: PropTypes.func,
-};
-
-export default Navigation;
+export default withStyles(styles)(Navigation);

@@ -1,6 +1,6 @@
 // Interfaces
 export interface IAppState {
-  roomId?: string;
+  roomShortId?: string;
   players: IPlayer[];
 }
 
@@ -32,6 +32,7 @@ export interface IHomeProps {
   createRoom: (player: IPlayer) => void;
   joinRoom: (player: IPlayer, roomToJoinShortId: string) => void;
   history: any;
+  classes: any;
 }
 
 export interface IRoomProps {
@@ -45,6 +46,7 @@ export interface IRoomProps {
   increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
   updatePlayerState: (playerData: any) => void;
+  classes: any;
 }
 
 export interface IPlayerCardProps {
@@ -80,4 +82,16 @@ export interface IAdditionalDamageExpanderProps {
 export interface ICounterColors {
   color: string;
   backgroundColor: string;
+}
+
+export interface INavigationProps {
+  roomShortId: any;
+  history: any;
+  classes: any;
+}
+
+export interface INavBarProps {
+  currentRoom: string;
+  classes: any;
+  returnHome: () => void;
 }

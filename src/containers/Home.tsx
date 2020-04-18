@@ -1,4 +1,5 @@
 import React, { Component, ChangeEvent } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
@@ -19,6 +20,24 @@ export enum CreatePlayerField {
   commander = 'commander',
   partnerCommander = 'partnerCommander',
 }
+
+const styles = {
+  homeContainer: {
+    marginTop: '3%',
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  newRoomButton: {
+    width: '100%',
+    height: '50%',
+  },
+  joinRoomButton: {
+    width: '100%',
+    height: '50%',
+  },
+};
 
 class Home extends Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
@@ -167,13 +186,23 @@ class Home extends Component<IHomeProps, IHomeState> {
 
   render(): JSX.Element {
     const { newModal, joinModal, roomToJoinShortId } = this.state;
-
+    const { classes } = this.props;
     return (
-      <div>
-        <Button variant="outlined" color="primary" onClick={this.handleNewModalToggle}>
+      <div className={classes.homeContainer}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.handleNewModalToggle}
+          className={classes.newRoomButton}
+        >
           New Room
         </Button>
-        <Button variant="outlined" color="primary" onClick={this.handleJoinModalToggle}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.handleJoinModalToggle}
+          className={classes.joinRoomButton}
+        >
           Join Room
         </Button>
 
@@ -217,7 +246,7 @@ class Home extends Component<IHomeProps, IHomeState> {
           <DialogTitle id="join-room-title">Join A Room</DialogTitle>
           <DialogContent>
             <DialogContentText>Please enter your display name and commander name.</DialogContentText>
-            {/* TODO: Make this text field only accept 6 characters and display that as well. */}
+            {/* TODO: Make this text field only accept 6 characters and display that as well. Also all uppercase */}
             <TextField
               autoFocus
               margin="dense"
@@ -250,4 +279,4 @@ class Home extends Component<IHomeProps, IHomeState> {
   }
 }
 
-export default Home;
+export default withStyles(styles)(Home);

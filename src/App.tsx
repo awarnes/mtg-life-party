@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 import Home from './containers/Home';
 import Room from './containers/Room';
@@ -9,13 +10,20 @@ import { IAppState, IPlayer } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
 import * as conn from './data/connection';
 
-class App extends Component<{}, IAppState> {
+const styles = {
+  appContainer: {
+    height: '100%',
+    width: '100%',
+  },
+};
+
+class App extends Component<{ classes: any }, IAppState> {
   constructor(props: any) {
     super(props);
 
     this.state = {
       players: [],
-      roomId: '',
+      roomShortId: '',
     };
   }
 
@@ -34,7 +42,7 @@ class App extends Component<{}, IAppState> {
 
     const players = await conn.getPlayers(room?.players ?? []);
 
-    this.setState({ players: players ?? [], roomId: roomToJoinShortId });
+    this.setState({ players: players ?? [], roomShortId: roomToJoinShortId });
 
     return room?.roomId ?? '';
   };
@@ -172,45 +180,48 @@ class App extends Component<{}, IAppState> {
   };
 
   render(): JSX.Element {
-    const { players } = this.state;
+    const { players, roomShortId } = this.state;
+    const { classes } = this.props;
     return (
-      <Router>
-        <div>
-          <Route path="/" render={(props): JSX.Element => <Navigation {...props} />} />
+      <div className={classes.appContainer}>
+        <Router>
+          <div className={classes.appContainer}>
+            <Route path="/" render={(props): JSX.Element => <Navigation {...props} roomShortId={roomShortId} />} />
 
-          <Route
-            exact
-            path="/"
-            render={(routeProps): JSX.Element => (
-              <Home {...routeProps} createRoom={this.createRoom} joinRoom={this.joinRoom} />
-            )}
-          />
-
-          <Switch>
             <Route
               exact
-              path="/room/:roomId"
+              path="/"
               render={(routeProps): JSX.Element => (
-                <Room
-                  {...routeProps}
-                  players={players}
-                  routeProps={routeProps}
-                  decreaseLife={this.decreaseLife}
-                  increaseLife={this.increaseLife}
-                  decreasePoisonCounters={this.decreasePoisonCounters}
-                  increasePoisonCounters={this.increasePoisonCounters}
-                  decreaseCommanderDamage={this.decreaseCommanderDamage}
-                  increaseCommanderDamage={this.increaseCommanderDamage}
-                  createNewCommanderDamage={this.createNewCommanderDamage}
-                  updatePlayerState={this.updatePlayerState}
-                />
+                <Home {...routeProps} createRoom={this.createRoom} joinRoom={this.joinRoom} />
               )}
             />
-          </Switch>
-        </div>
-      </Router>
+
+            <Switch>
+              <Route
+                exact
+                path="/room/:roomId"
+                render={(routeProps): JSX.Element => (
+                  <Room
+                    {...routeProps}
+                    players={players}
+                    routeProps={routeProps}
+                    decreaseLife={this.decreaseLife}
+                    increaseLife={this.increaseLife}
+                    decreasePoisonCounters={this.decreasePoisonCounters}
+                    increasePoisonCounters={this.increasePoisonCounters}
+                    decreaseCommanderDamage={this.decreaseCommanderDamage}
+                    increaseCommanderDamage={this.increaseCommanderDamage}
+                    createNewCommanderDamage={this.createNewCommanderDamage}
+                    updatePlayerState={this.updatePlayerState}
+                  />
+                )}
+              />
+            </Switch>
+          </div>
+        </Router>
+      </div>
     );
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

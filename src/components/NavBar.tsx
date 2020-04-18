@@ -1,52 +1,41 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { AppBar, Toolbar, Typography, Button, IconButton, withStyles } from '@material-ui/core';
 
-import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home';
+
+import { INavBarProps } from '../lib/mtgLifeInterfaces';
 
 const styles = {
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
   },
 };
 
-class NavBar extends Component {
-  render() {
-    const { user, toggleNavDrawer, handleNavAuth, currentScreen, classes } = this.props;
+class NavBar extends Component<INavBarProps, {}> {
+  render(): JSX.Element {
+    const { currentRoom, classes, returnHome } = this.props;
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" onClick={toggleNavDrawer}>
-              <MenuIcon />
+            <IconButton className={classes.menuButton} color="inherit" onClick={returnHome}>
+              <HomeIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {currentScreen}
-            </Typography>
-            <Button color="inherit" onClick={handleNavAuth}>
-              {user ? 'Log Out' : 'Log In'}
-            </Button>
+            {/* TODO: Create a copyable/clickable link for sending room name to other users */}
+            {currentRoom ? (
+              <Typography variant="h6" color="inherit" className={classes.grow}>
+                Room: {currentRoom}
+              </Typography>
+            ) : (
+              <div />
+            )}
           </Toolbar>
         </AppBar>
       </div>
     );
   }
 }
-
-NavBar.propTypes = {
-  user: PropTypes.object,
-  toggleNavDrawer: PropTypes.func,
-  handleNavAuth: PropTypes.func,
-  currentScreen: PropTypes.string,
-  classes: PropTypes.object,
-};
 
 export default withStyles(styles)(NavBar);

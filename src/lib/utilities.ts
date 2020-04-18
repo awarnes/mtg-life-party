@@ -1,5 +1,5 @@
 export function getRoomShortId(roomId: string): string {
-  return roomId.slice(-6);
+  return roomId.slice(-6).toUpperCase();
 }
 
 export function getGathererURL(commanderName: string): string {
