@@ -1,6 +1,6 @@
 import { IPlayer, ICommanderDamage } from '../lib/mtgLifeInterfaces';
 
-class Player implements IPlayer {
+class DPlayer implements IPlayer {
   uid?: string;
   name: string;
   life: number;
@@ -33,7 +33,7 @@ class Player implements IPlayer {
 
 // Firestore data converter
 const playerConverter = {
-  toFirestore: (player: Player): object => {
+  toFirestore: (player: DPlayer): object => {
     return {
       uid: player.uid,
       name: player.name,
@@ -45,14 +45,14 @@ const playerConverter = {
       colorTheme: player.colorTheme,
     };
   },
-  fromFirestore: (snapshot: any, options: any): Player => {
+  fromFirestore: (snapshot: any, options: any): DPlayer => {
     const data = snapshot.data(options);
-    return new Player(
+    return new DPlayer(
       data.name,
       data.life,
       data.commander,
-      data.commanderDamage,
       data.partnerCommander,
+      data.commanderDamage,
       data.poisonCounters,
       data.colorTheme,
       data.uid,
@@ -60,4 +60,4 @@ const playerConverter = {
   },
 };
 
-export { Player, playerConverter };
+export { DPlayer, playerConverter };

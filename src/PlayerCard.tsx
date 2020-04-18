@@ -18,6 +18,7 @@ import { IPlayerCardProps } from './lib/mtgLifeInterfaces';
 import { colorStyles } from './lib/mtgLifeConstants';
 import DamageCounter from './DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
+import { getGathererURL } from './lib/utilities';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 
@@ -27,14 +28,6 @@ const useStyles = makeStyles({
     minHeight: '75pt',
   },
 });
-
-function getGathererURL(commanderName: string): string {
-  const searchArray = commanderName.replace(/[^\w\s]/g, '').split(' ');
-
-  return `https://gatherer.wizards.com/Pages/Search/Default.aspx?name=${searchArray
-    .map((term: string): string => `|[${term}]`)
-    .join('')}`;
-}
 
 function PlayerCard(props: IPlayerCardProps): JSX.Element {
   // Styling and Props

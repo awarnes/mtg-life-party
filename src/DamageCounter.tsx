@@ -77,14 +77,14 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
   const handleDecreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage - 1);
-    decreaseDamageCount(playerId);
+    decreaseDamageCount(playerId || '');
     startTempChange();
   };
 
   const handleIncreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage + 1);
-    increaseDamageCount(playerId);
+    increaseDamageCount(playerId || '');
     startTempChange();
   };
 

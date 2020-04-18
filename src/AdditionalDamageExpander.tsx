@@ -21,6 +21,11 @@ const useStyles = makeStyles({
     minHeight: '30pt',
     width: '70%',
   },
+  formControl: {
+    position: 'relative',
+    minHeight: '30pt',
+    width: '70%',
+  },
 });
 
 function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.Element {
@@ -68,11 +73,12 @@ function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.El
         <FormControl className={classes.formControl}>
           <InputLabel id="new-commander-select-label">Age</InputLabel>
           <Select labelId="new-commander-select-label" id="new-commander-select" value={0} onChange={console.log}>
-            {roomCommanders.map((commander) => (
+            {/* {roomCommanders.map((commander) => (
               <MenuItem key={commander} value={commander}>
                 {commander}
               </MenuItem>
-            ))}
+            ))} */}
+            <MenuItem>Hello!</MenuItem>
           </Select>
         </FormControl>
       </ExpansionPanelDetails>

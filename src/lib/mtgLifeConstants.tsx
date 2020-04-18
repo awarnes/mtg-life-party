@@ -30,3 +30,9 @@ export const colorStyles: any = {
     backgroundColor: deepPurple[500],
   },
 };
+
+export enum CounterType {
+  lifeCounter = 'lifeCounter',
+  poisonCounter = 'poisonCounter',
+  commanderDamage = 'commanderDamage',
+}

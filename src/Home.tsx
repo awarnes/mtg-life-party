@@ -12,6 +12,7 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
 import { IHomeState, IHomeProps } from './lib/mtgLifeInterfaces';
+import { DPlayer } from './data/DPlayer';
 
 export enum CreatePlayerField {
   name = 'name',
@@ -36,7 +37,7 @@ class Home extends Component<IHomeProps, IHomeState> {
         poisonCounters: 0,
         commanderDamage: [],
       },
-      roomToJoinId: '',
+      roomToJoinShortId: '',
     };
   }
 
@@ -78,20 +79,38 @@ class Home extends Component<IHomeProps, IHomeState> {
     this.setState({ player: newPlayer, addingPartner: false });
   };
 
-  handleRoomToJoinIdChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
-    this.setState({ roomToJoinId: event.target.value });
+  handleRoomToJoinShortIdChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    this.setState({ roomToJoinShortId: event.target.value });
   };
 
-  handleCreateNewRoom = (): void => {
+  handleCreateNewRoom = async (): Promise<void> => {
     const { player } = this.state;
-
-    this.props.createRoom(player);
+    const newPlayer = new DPlayer(
+      player.name,
+      player.life,
+      player.commander,
+      player.partnerCommander,
+      player.commanderDamage,
+      player.poisonCounters,
+      player.colorTheme,
+    );
+    const roomId = await this.props.createRoom(newPlayer);
+    this.props.history.push(`/room/${roomId}`);
   };
 
-  handleJoinRoom = (): void => {
-    const { player, roomToJoinId } = this.state;
-
-    this.props.joinRoom(player, roomToJoinId);
+  handleJoinRoom = async (): Promise<void> => {
+    const { player, roomToJoinShortId } = this.state;
+    const newPlayer = new DPlayer(
+      player.name,
+      player.life,
+      player.commander,
+      player.partnerCommander,
+      player.commanderDamage,
+      player.poisonCounters,
+      player.colorTheme,
+    );
+    const roomId = await this.props.joinRoom(newPlayer, roomToJoinShortId);
+    this.props.history.push(`/room/${roomId}`);
   };
 
   createPlayer = (focus: boolean): JSX.Element => {
@@ -147,7 +166,7 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
 
   render(): JSX.Element {
-    const { newModal, joinModal, roomToJoinId } = this.state;
+    const { newModal, joinModal, roomToJoinShortId } = this.state;
 
     return (
       <div>
@@ -198,14 +217,15 @@ class Home extends Component<IHomeProps, IHomeState> {
           <DialogTitle id="join-room-title">Join A Room</DialogTitle>
           <DialogContent>
             <DialogContentText>Please enter your display name and commander name.</DialogContentText>
+            {/* TODO: Make this text field only accept 6 characters and display that as well. */}
             <TextField
               autoFocus
               margin="dense"
               id="room-id"
               label="Room ID"
               type="text"
-              value={roomToJoinId}
-              onChange={this.handleRoomToJoinIdChange}
+              value={roomToJoinShortId}
+              onChange={this.handleRoomToJoinShortIdChange}
               fullWidth
             />
             {this.createPlayer(false)}

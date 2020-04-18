@@ -1,7 +1,7 @@
 // Interfaces
 export interface IAppState {
   roomId?: string;
-  players: Array<IPlayer>;
+  players: IPlayer[];
 }
 
 export interface IPlayer {
@@ -25,16 +25,17 @@ export interface IHomeState {
   joinModal: boolean;
   addingPartner: boolean;
   player: IPlayer;
-  roomToJoinId: string;
+  roomToJoinShortId: string;
 }
 
 export interface IHomeProps {
   createRoom: (player: IPlayer) => void;
-  joinRoom: (player: IPlayer, roomToJoinId: string) => void;
+  joinRoom: (player: IPlayer, roomToJoinShortId: string) => void;
+  history: any;
 }
 
 export interface IRoomProps {
-  roomId?: string;
+  routeProps: any;
   players: Array<IPlayer>;
   decreaseLife: (playerId?: string) => void;
   increaseLife: (playerId?: string) => void;
@@ -43,6 +44,7 @@ export interface IRoomProps {
   decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  updatePlayerState: (playerData: any) => void;
 }
 
 export interface IPlayerCardProps {
@@ -57,8 +59,8 @@ export interface IPlayerCardProps {
 }
 
 export interface IDamageCounterProps {
-  playerId: string;
-  damageCount: number;
+  playerId?: string;
+  damageCount?: number;
   // counterFocus: CounterFocus; See below, probably not needed.
   increaseDamageCount: (playerId: string, commanderName?: string) => void;
   decreaseDamageCount: (playerId: string, commanderName?: string) => void;
