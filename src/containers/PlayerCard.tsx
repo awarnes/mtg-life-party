@@ -14,11 +14,11 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BrushIcon from '@material-ui/icons/Brush';
 import CloseIcon from '@material-ui/icons/Close';
 // MTG Life Party
-import { IPlayerCardProps } from './lib/mtgLifeInterfaces';
-import { colorStyles } from './lib/mtgLifeConstants';
-import DamageCounter from './DamageCounter';
+import { IPlayerCardProps } from '../lib/mtgLifeInterfaces';
+import { colorStyles } from '../lib/mtgLifeConstants';
+import DamageCounter from '../components/DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
-import { getGathererURL } from './lib/utilities';
+import { getGathererURL } from '../lib/utilities';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 

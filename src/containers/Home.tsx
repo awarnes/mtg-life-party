@@ -11,8 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
-import { IHomeState, IHomeProps } from './lib/mtgLifeInterfaces';
-import { DPlayer } from './data/DPlayer';
+import { IHomeState, IHomeProps } from '../lib/mtgLifeInterfaces';
+import { DPlayer } from '../data/DPlayer';
 
 export enum CreatePlayerField {
   name = 'name',

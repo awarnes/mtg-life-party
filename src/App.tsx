@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-import Home from './Home';
-import Room from './Room';
+import Home from './containers/Home';
+import Room from './containers/Room';
+import Navigation from './containers/Navigation';
+
 import { IAppState, IPlayer } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
 import * as conn from './data/connection';
@@ -173,32 +175,39 @@ class App extends Component<{}, IAppState> {
     const { players } = this.state;
     return (
       <Router>
-        <Switch>
+        <div>
+          <Route path="/" render={(props): JSX.Element => <Navigation {...props} />} />
+
           <Route
-            path="/room/:roomId"
-            render={(routeProps): JSX.Element => (
-              <Room
-                {...routeProps}
-                players={players}
-                routeProps={routeProps}
-                decreaseLife={this.decreaseLife}
-                increaseLife={this.increaseLife}
-                decreasePoisonCounters={this.decreasePoisonCounters}
-                increasePoisonCounters={this.increasePoisonCounters}
-                decreaseCommanderDamage={this.decreaseCommanderDamage}
-                increaseCommanderDamage={this.increaseCommanderDamage}
-                createNewCommanderDamage={this.createNewCommanderDamage}
-                updatePlayerState={this.updatePlayerState}
-              />
-            )}
-          />
-          <Route
+            exact
             path="/"
             render={(routeProps): JSX.Element => (
               <Home {...routeProps} createRoom={this.createRoom} joinRoom={this.joinRoom} />
             )}
           />
-        </Switch>
+
+          <Switch>
+            <Route
+              exact
+              path="/room/:roomId"
+              render={(routeProps): JSX.Element => (
+                <Room
+                  {...routeProps}
+                  players={players}
+                  routeProps={routeProps}
+                  decreaseLife={this.decreaseLife}
+                  increaseLife={this.increaseLife}
+                  decreasePoisonCounters={this.decreasePoisonCounters}
+                  increasePoisonCounters={this.increasePoisonCounters}
+                  decreaseCommanderDamage={this.decreaseCommanderDamage}
+                  increaseCommanderDamage={this.increaseCommanderDamage}
+                  createNewCommanderDamage={this.createNewCommanderDamage}
+                  updatePlayerState={this.updatePlayerState}
+                />
+              )}
+            />
+          </Switch>
+        </div>
       </Router>
     );
   }

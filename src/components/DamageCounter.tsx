@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
-import { IDamageCounterProps } from './lib/mtgLifeInterfaces';
+import { IDamageCounterProps } from '../lib/mtgLifeInterfaces';
 
 function DamageCounter(props: IDamageCounterProps): JSX.Element {
   const { playerId, damageCount, increaseDamageCount, decreaseDamageCount, counterColors, counterSize } = props;

@@ -12,8 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { lightGreen, common } from '@material-ui/core/colors';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import DamageCounter from './DamageCounter';
-import { IAdditionalDamageExpanderProps } from './lib/mtgLifeInterfaces';
+import DamageCounter from '../components/DamageCounter';
+import { IAdditionalDamageExpanderProps } from '../lib/mtgLifeInterfaces';
 
 const useStyles = makeStyles({
   poisonCountersContainer: {

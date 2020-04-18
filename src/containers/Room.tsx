@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { IRoomProps } from './lib/mtgLifeInterfaces';
-import { listenToPlayersInRoom } from './data/connection';
+import { IRoomProps } from '../lib/mtgLifeInterfaces';
+import { listenToPlayersInRoom } from '../data/connection';
 import PlayerCard from './PlayerCard';
 
 class Room extends Component<IRoomProps> {
