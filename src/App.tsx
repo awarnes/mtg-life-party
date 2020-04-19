@@ -10,7 +10,6 @@ import { IAppState, IPlayer, IRoom } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
 import * as conn from './data/connection';
 
-// TODO: Handle increases by a given amount (+5, +10, and custom)
 // TODO: Create user accounts and allow users to see past rooms
 // TODO: Create user accounts and allow them to save default players
 
@@ -206,12 +205,17 @@ class App extends Component<{}, IAppState> {
   };
 
   updateRoomState = (newRoom: IRoom): void => {
-    this.setState({ room: newRoom, roomShortId: newRoom.roomShortId });
+    this.setState({ room: newRoom, roomShortId: newRoom.roomShortId }, async () => {
+      const newPlayerArray = await conn.getPlayers(this.state.room?.players ?? []);
+      this.setState({ players: newPlayerArray ?? [] });
+    });
   };
 
-  handleRemovePlayerFromRoom = (playerId: string): void => {
-    const { room } = this.state;
-    conn.removePlayerFromRoom(room?.roomShortId, playerId);
+  handleRemovePlayerFromRoom = async (playerId: string): Promise<void> => {
+    const { room, players } = this.state;
+    await conn.removePlayerFromRoom(room?.roomShortId, playerId);
+    const newPlayers = players.filter((player) => player.uid !== playerId);
+    this.setState({ players: newPlayers });
   };
 
   render(): JSX.Element {

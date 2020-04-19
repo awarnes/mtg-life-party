@@ -142,12 +142,14 @@ export async function addPlayerToRoom(roomToJoinShortId: string, playerUID: stri
 export async function removePlayerFromRoom(roomShortId: string | undefined, playerUID: string): Promise<void> {
   const room = await getRoomByShortId(roomShortId ?? '');
 
-  return db
+  await db
     .collection('rooms')
     .doc(room?.roomId)
     .update({
       players: firebase.firestore.FieldValue.arrayRemove(playerUID),
     });
+
+  db.collection('players').doc(playerUID).delete();
 }
 
 export function listenToRoom(roomId: string, roomStateUpdateCallback: Function): void {

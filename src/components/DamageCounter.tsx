@@ -10,6 +10,9 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { IDamageCounterProps } from '../lib/mtgLifeInterfaces';
 
+// TODO: Make the buttons look cooler
+// -(-(-( 40 )+)+)+
+
 function DamageCounter(props: IDamageCounterProps): JSX.Element {
   const {
     playerId,
