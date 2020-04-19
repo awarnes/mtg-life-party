@@ -14,6 +14,7 @@ import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
 import { IHomeState, IHomeProps } from '../lib/mtgLifeInterfaces';
 import { DPlayer } from '../data/DPlayer';
+import { parseQuery } from '../lib/utilities';
 
 export enum CreatePlayerField {
   name = 'name',
@@ -43,6 +44,8 @@ class Home extends Component<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
     super(props);
 
+    const shortId = parseQuery(window.location.search);
+
     this.state = {
       newModal: false,
       joinModal: false,
@@ -56,7 +59,8 @@ class Home extends Component<IHomeProps, IHomeState> {
         poisonCounters: 0,
         commanderDamage: [],
       },
-      roomToJoinShortId: '',
+
+      roomToJoinShortId: shortId ? shortId.room : '',
     };
   }
 

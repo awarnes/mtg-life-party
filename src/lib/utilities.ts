@@ -9,3 +9,14 @@ export function getGathererURL(commanderName: string): string {
     .map((term: string): string => `|[${term}]`)
     .join('')}`;
 }
+
+// SO: https://stackoverflow.com/a/13419367
+export function parseQuery(queryString: string): any {
+  const query: any = {};
+  const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=');
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}

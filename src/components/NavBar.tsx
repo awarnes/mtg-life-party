@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, withStyles } from '@material-ui/core';
-
+import { AppBar, Toolbar, IconButton, Button, withStyles } from '@material-ui/core';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 import HomeIcon from '@material-ui/icons/Home';
 
 import { INavBarProps } from '../lib/mtgLifeInterfaces';
+import { getRoomShortId } from '../lib/utilities';
 
 const styles = {
   navBarContainer: {
@@ -14,9 +15,22 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  copyButtonGroup: {
+    width: 'fit-content',
+    border: '1px solid',
+    padding: '.25em',
+    borderRadius: 4,
+    backgroundColor: '#df69b4',
+  },
 };
 
 class NavBar extends Component<INavBarProps, {}> {
+  handleCopy = () => {
+    const { currentRoom } = this.props;
+    const shortId = getRoomShortId(currentRoom);
+    navigator.clipboard.writeText(`localhost:3000?room=${shortId}`);
+  };
+
   render(): JSX.Element {
     const { currentRoom, classes, returnHome } = this.props;
 
@@ -24,14 +38,13 @@ class NavBar extends Component<INavBarProps, {}> {
       <div className={classes.navBarContainer}>
         <AppBar position="fixed">
           <Toolbar className={classes.toolBar}>
-            {/* TODO: Create a copyable/clickable link for sending room name to other users */}
             <IconButton color="inherit" onClick={returnHome}>
               <HomeIcon />
             </IconButton>
             {currentRoom ? (
-              <Typography variant="h6" color="inherit">
+              <Button onClick={this.handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
                 Room: {currentRoom}
-              </Typography>
+              </Button>
             ) : (
               <div />
             )}
