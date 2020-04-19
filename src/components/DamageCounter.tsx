@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 
@@ -20,28 +22,7 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
   } = props;
 
   const classes = makeStyles((theme) => ({
-    decreaseButton: {
-      position: 'absolute',
-      width: '50%',
-      height: '100%',
-      top: 0,
-      left: 0,
-      textAlign: 'center',
-    },
-    increaseButton: {
-      position: 'absolute',
-      width: '50%',
-      height: '100%',
-      top: 0,
-      left: '50%',
-      textAlign: 'center',
-    },
     countTotal: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      zIndex: 2,
       height: theme.spacing(counterSize),
       width: theme.spacing(counterSize),
     },
@@ -82,47 +63,60 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
     return (): void => clearInterval(interval);
   }, [tempChangeActive, tempChangeMS, resetTempChange]);
 
-  const handleDecreaseClick = (): void => {
+  const handleDecreaseClick = (event: any): void => {
+    const amountToChange: number = parseInt(event.target.textContent, 10) * -1;
     resetTempTimer();
-    setTempChange((prevDamage: number): number => prevDamage - 1);
+    setTempChange((prevDamage: number): number => prevDamage - amountToChange);
     if (commanderName) {
-      decreaseDamageCount(playerId || '', commanderName);
+      decreaseDamageCount(playerId || '', amountToChange, commanderName);
     } else {
-      decreaseDamageCount(playerId || '');
+      decreaseDamageCount(playerId || '', amountToChange);
     }
     startTempChange();
   };
 
-  const handleIncreaseClick = (): void => {
+  const handleIncreaseClick = (event: any): void => {
+    const amountToChange: number = parseInt(event.target.textContent, 10);
+
     resetTempTimer();
-    setTempChange((prevDamage: number): number => prevDamage + 1);
+    setTempChange((prevDamage: number): number => prevDamage + amountToChange);
     if (commanderName) {
-      increaseDamageCount(playerId || '', commanderName);
+      increaseDamageCount(playerId || '', amountToChange, commanderName);
     } else {
-      increaseDamageCount(playerId || '');
+      increaseDamageCount(playerId || '', amountToChange);
     }
     startTempChange();
   };
 
   return (
-    <div style={{ display: 'inline-block' }}>
-      <IconButton className={classes.decreaseButton} onClick={handleDecreaseClick}>
-        <RemoveIcon />
-      </IconButton>
-      <IconButton className={classes.increaseButton} onClick={handleIncreaseClick}>
-        <AddIcon />
-      </IconButton>
-      <Tooltip
-        title={tempChange >= 0 ? `+${tempChange}` : tempChange}
-        placement={tempChange < 0 ? 'left' : 'right'}
-        open={tempChangeActive && tempChange !== 0}
-        arrow
-      >
-        <Avatar aria-label={`current count is ${damageCount}`} className={classes.countTotal} style={counterColors}>
-          {damageCount}
-        </Avatar>
-      </Tooltip>
-    </div>
+    <Grid container justify="center" alignItems="center">
+      <Grid item>
+        <ButtonGroup variant="outlined">
+          <Button onClick={handleDecreaseClick}>-10</Button>
+          <Button onClick={handleDecreaseClick}>-5</Button>
+          <Button onClick={handleDecreaseClick}>-1</Button>
+        </ButtonGroup>
+      </Grid>
+      <Grid item>
+        <Tooltip
+          title={tempChange >= 0 ? `+${tempChange}` : tempChange}
+          placement={tempChange < 0 ? 'left' : 'right'}
+          open={tempChangeActive && tempChange !== 0}
+          arrow
+        >
+          <Avatar aria-label={`current count is ${damageCount}`} className={classes.countTotal} style={counterColors}>
+            {damageCount}
+          </Avatar>
+        </Tooltip>
+      </Grid>
+      <Grid item>
+        <ButtonGroup variant="outlined">
+          <Button onClick={handleIncreaseClick}>+1</Button>
+          <Button onClick={handleIncreaseClick}>+5</Button>
+          <Button onClick={handleIncreaseClick}>+10</Button>
+        </ButtonGroup>
+      </Grid>
+    </Grid>
   );
 }
 

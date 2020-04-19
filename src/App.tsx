@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Home from './containers/Home';
 import Room from './containers/Room';
 import Navigation from './containers/Navigation';
+import PositionedSnackbar from './components/PositionedSnackbar';
 
 import { IAppState, IPlayer, IRoom } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
@@ -21,6 +22,10 @@ class App extends Component<{}, IAppState> {
       players: [],
       roomShortId: '',
       room: undefined,
+      snackbar: {
+        open: false,
+        message: '',
+      },
     };
   }
 
@@ -44,11 +49,25 @@ class App extends Component<{}, IAppState> {
     return room?.roomId ?? '';
   };
 
-  decreaseLife = (playerId?: string): void => {
-    if (!playerId) return;
+  handleSnackbarToggle = (message?: string) => {
+    const newSnackbar = Object.assign({}, this.state.snackbar);
+
+    if (newSnackbar.open) {
+      newSnackbar.open = false;
+      newSnackbar.message = '';
+    } else {
+      newSnackbar.open = true;
+      newSnackbar.message = message;
+    }
+
+    this.setState({ snackbar: newSnackbar });
+  };
+
+  decreaseLife = (playerId?: string, amountToChange?: number): void => {
+    if (!playerId || !amountToChange) return;
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId) {
-        player.life -= 1;
+        player.life -= amountToChange;
       }
       return player;
     });
@@ -57,11 +76,11 @@ class App extends Component<{}, IAppState> {
     });
   };
 
-  increaseLife = (playerId?: string): void => {
-    if (!playerId) return;
+  increaseLife = (playerId?: string, amountToChange?: number): void => {
+    if (!playerId || !amountToChange) return;
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId) {
-        player.life += 1;
+        player.life += amountToChange;
       }
       return player;
     });
@@ -70,11 +89,11 @@ class App extends Component<{}, IAppState> {
     });
   };
 
-  decreasePoisonCounters = (playerId?: string): void => {
-    if (!playerId) return;
+  decreasePoisonCounters = (playerId?: string, amountToChange?: number): void => {
+    if (!playerId || !amountToChange) return;
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId && player.poisonCounters !== undefined) {
-        player.poisonCounters -= 1;
+        player.poisonCounters -= amountToChange;
       }
       return player;
     });
@@ -83,11 +102,11 @@ class App extends Component<{}, IAppState> {
     });
   };
 
-  increasePoisonCounters = (playerId?: string): void => {
-    if (!playerId) return;
+  increasePoisonCounters = (playerId?: string, amountToChange?: number): void => {
+    if (!playerId || !amountToChange) return;
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId && player.poisonCounters !== undefined) {
-        player.poisonCounters += 1;
+        player.poisonCounters += amountToChange;
       }
       return player;
     });
@@ -96,14 +115,14 @@ class App extends Component<{}, IAppState> {
     });
   };
 
-  decreaseCommanderDamage = (playerId?: string, commanderName?: string): void => {
-    if (!playerId || !commanderName) return;
+  decreaseCommanderDamage = (playerId?: string, amountToChange?: number, commanderName?: string): void => {
+    if (!playerId || !amountToChange || !commanderName) return;
 
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId) {
         const newCommanderDamage = player.commanderDamage?.map((comDmg) => {
           if (comDmg.name === commanderName) {
-            comDmg.amount -= 1;
+            comDmg.amount -= amountToChange;
           }
           return comDmg;
         });
@@ -119,14 +138,14 @@ class App extends Component<{}, IAppState> {
     });
   };
 
-  increaseCommanderDamage = (playerId?: string, commanderName?: string): void => {
-    if (!playerId || !commanderName) return;
+  increaseCommanderDamage = (playerId?: string, amountToChange?: number, commanderName?: string): void => {
+    if (!playerId || !amountToChange || !commanderName) return;
 
     const newPlayers = this.state.players.map((player) => {
       if (player.uid === playerId) {
         const newCommanderDamage = player.commanderDamage?.map((comDmg) => {
           if (comDmg.name === commanderName) {
-            comDmg.amount += 1;
+            comDmg.amount += amountToChange;
           }
           return comDmg;
         });
@@ -196,43 +215,58 @@ class App extends Component<{}, IAppState> {
   };
 
   render(): JSX.Element {
-    const { players, room } = this.state;
+    const { players, room, snackbar } = this.state;
     return (
-      <Router>
-        <Route path="/" render={(props): JSX.Element => <Navigation {...props} roomShortId={room?.roomShortId} />} />
+      <div>
+        <Router>
+          <Route
+            path="/"
+            render={(props): JSX.Element => (
+              <Navigation {...props} roomShortId={room?.roomShortId} handleSnackbarToggle={this.handleSnackbarToggle} />
+            )}
+          />
 
-        <Route
-          exact
-          path="/"
-          render={(routeProps): JSX.Element => (
-            <Home {...routeProps} createRoom={this.createRoom} joinRoom={this.joinRoom} />
-          )}
-        />
+          <Route
+            exact
+            path="/"
+            render={(routeProps): JSX.Element => (
+              <Home {...routeProps} createRoom={this.createRoom} joinRoom={this.joinRoom} />
+            )}
+          />
 
-        <Route
-          exact
-          path="/room/:roomId"
-          render={(routeProps): JSX.Element => (
-            <Room
-              {...routeProps}
-              players={players}
-              room={room}
-              routeProps={routeProps}
-              decreaseLife={this.decreaseLife}
-              increaseLife={this.increaseLife}
-              decreasePoisonCounters={this.decreasePoisonCounters}
-              increasePoisonCounters={this.increasePoisonCounters}
-              decreaseCommanderDamage={this.decreaseCommanderDamage}
-              increaseCommanderDamage={this.increaseCommanderDamage}
-              createNewCommanderDamage={this.createNewCommanderDamage}
-              deletePlayer={this.handleRemovePlayerFromRoom}
-              updatePlayerState={this.updatePlayerState}
-              updateRoomState={this.updateRoomState}
-              updateRoomId={this.updateRoomId}
-            />
-          )}
+          <Route
+            exact
+            path="/room/:roomId"
+            render={(routeProps): JSX.Element => (
+              <Room
+                {...routeProps}
+                players={players}
+                room={room}
+                routeProps={routeProps}
+                decreaseLife={this.decreaseLife}
+                increaseLife={this.increaseLife}
+                decreasePoisonCounters={this.decreasePoisonCounters}
+                increasePoisonCounters={this.increasePoisonCounters}
+                decreaseCommanderDamage={this.decreaseCommanderDamage}
+                increaseCommanderDamage={this.increaseCommanderDamage}
+                createNewCommanderDamage={this.createNewCommanderDamage}
+                deletePlayer={this.handleRemovePlayerFromRoom}
+                updatePlayerState={this.updatePlayerState}
+                updateRoomState={this.updateRoomState}
+                updateRoomId={this.updateRoomId}
+              />
+            )}
+          />
+        </Router>
+        <PositionedSnackbar
+          vertical="top"
+          horizontal="center"
+          open={snackbar.open}
+          autoHideDuration={1000}
+          message={snackbar.message}
+          handleSnackbarToggle={this.handleSnackbarToggle}
         />
-      </Router>
+      </div>
     );
   }
 }

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { AppBar, Toolbar, IconButton, Button, withStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, IconButton, Button, Snackbar, SnackbarContent, withStyles } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import HomeIcon from '@material-ui/icons/Home';
 
@@ -24,35 +24,34 @@ const styles = {
   },
 };
 
-class NavBar extends Component<INavBarProps, {}> {
-  handleCopy = () => {
-    const { currentRoom } = this.props;
+function NavBar(props: INavBarProps): JSX.Element {
+  const { currentRoom, classes, returnHome, handleSnackbarToggle } = props;
+
+  const handleCopy = (): void => {
+    const { currentRoom } = props;
     const shortId = getRoomShortId(currentRoom);
     navigator.clipboard.writeText(`localhost:3000?room=${shortId}`);
+    handleSnackbarToggle('Copied!');
   };
 
-  render(): JSX.Element {
-    const { currentRoom, classes, returnHome } = this.props;
-
-    return (
-      <div className={classes.navBarContainer}>
-        <AppBar position="fixed">
-          <Toolbar className={classes.toolBar}>
-            <IconButton color="inherit" onClick={returnHome}>
-              <HomeIcon />
-            </IconButton>
-            {currentRoom ? (
-              <Button onClick={this.handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
-                Room: {currentRoom}
-              </Button>
-            ) : (
-              <div />
-            )}
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.navBarContainer}>
+      <AppBar position="fixed">
+        <Toolbar className={classes.toolBar}>
+          <IconButton color="inherit" onClick={returnHome}>
+            <HomeIcon />
+          </IconButton>
+          {currentRoom ? (
+            <Button onClick={handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
+              Room: {currentRoom}
+            </Button>
+          ) : (
+            <div />
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }
 
 export default withStyles(styles)(NavBar);

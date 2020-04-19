@@ -3,6 +3,7 @@ export interface IAppState {
   roomShortId?: string;
   players: IPlayer[];
   room?: IRoom;
+  snackbar: any;
 }
 
 export interface IPlayer {
@@ -46,12 +47,12 @@ export interface IRoomProps {
   routeProps: any;
   players: Array<IPlayer>;
   room: IRoom | undefined;
-  decreaseLife: (playerId?: string) => void;
-  increaseLife: (playerId?: string) => void;
-  decreasePoisonCounters: (playerId?: string) => void;
-  increasePoisonCounters: (playerId?: string) => void;
-  decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
-  increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  decreaseLife: (playerId?: string, amountToChange?: number) => void;
+  increaseLife: (playerId?: string, amountToChange?: number) => void;
+  decreasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  increasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
+  increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
   updatePlayerState: (playerData: IPlayer) => void;
   updateRoomState: (roomData: IRoom) => void;
@@ -62,12 +63,12 @@ export interface IRoomProps {
 
 export interface IPlayerCardProps {
   player: IPlayer;
-  increaseLife: () => void;
-  decreaseLife: () => void;
-  decreasePoisonCounters: (playerId?: string) => void;
-  increasePoisonCounters: (playerId?: string) => void;
-  decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
-  increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  increaseLife: (playerId?: string, amountToChange?: number) => void;
+  decreaseLife: (playerId?: string, amountToChange?: number) => void;
+  decreasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  increasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
+  increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
   commandersInRoom: string[];
   deletePlayer: (playerId: string) => void;
@@ -77,18 +78,18 @@ export interface IDamageCounterProps {
   playerId?: string;
   commanderName?: string;
   damageCount?: number;
-  increaseDamageCount: (playerId: string, commanderName?: string) => void;
-  decreaseDamageCount: (playerId: string, commanderName?: string) => void;
+  increaseDamageCount: (playerId: string, amountToChange?: number, commanderName?: string) => void;
+  decreaseDamageCount: (playerId: string, amountToChange?: number, commanderName?: string) => void;
   counterSize: number;
   counterColors: ICounterColors;
 }
 
 export interface IAdditionalDamageExpanderProps {
   player: IPlayer;
-  decreasePoisonCounters: (playerId?: string) => void;
-  increasePoisonCounters: (playerId?: string) => void;
-  decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
-  increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  decreasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  increasePoisonCounters: (playerId?: string, amountToChange?: number) => void;
+  decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
+  increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
   commandersInRoom: string[];
 }
@@ -101,10 +102,12 @@ export interface ICounterColors {
 export interface INavigationProps {
   roomShortId: any;
   history: any;
+  handleSnackbarToggle: (message?: string) => void;
 }
 
 export interface INavBarProps {
   currentRoom: string;
   classes: any;
   returnHome: () => void;
+  handleSnackbarToggle: (message?: string) => void;
 }
