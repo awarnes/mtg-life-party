@@ -5,8 +5,6 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
-import RemoveIcon from '@material-ui/icons/Remove';
-import AddIcon from '@material-ui/icons/Add';
 
 import { IDamageCounterProps } from '../lib/mtgLifeInterfaces';
 

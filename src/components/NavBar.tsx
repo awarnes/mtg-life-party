@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Button, Snackbar, SnackbarContent, withStyles } from '@material-ui/core';
+import React from 'react';
+import { AppBar, Toolbar, IconButton, Button, withStyles } from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import HomeIcon from '@material-ui/icons/Home';
 

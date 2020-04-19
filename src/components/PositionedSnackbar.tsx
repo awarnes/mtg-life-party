@@ -10,10 +10,10 @@ export interface ISnackbarProps extends SnackbarOrigin {
   handleSnackbarToggle: (message?: string) => void;
 }
 
-export default function PositionedSnackbar(props: ISnackbarProps) {
+export default function PositionedSnackbar(props: ISnackbarProps): JSX.Element {
   const { vertical, horizontal, open, message, handleSnackbarToggle, autoHideDuration } = props;
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     handleSnackbarToggle();
   };
 

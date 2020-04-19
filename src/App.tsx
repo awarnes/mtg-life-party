@@ -48,7 +48,7 @@ class App extends Component<{}, IAppState> {
     return room?.roomId ?? '';
   };
 
-  handleSnackbarToggle = (message?: string) => {
+  handleSnackbarToggle = (message?: string): void => {
     const newSnackbar = Object.assign({}, this.state.snackbar);
 
     if (newSnackbar.open) {

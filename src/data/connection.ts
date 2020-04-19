@@ -4,7 +4,7 @@ import { db } from './Firebase';
 import { DPlayer, playerConverter } from './DPlayer';
 import { DRoom, roomConverter } from './DRoom';
 
-import { CounterType } from '../lib/mtgLifeConstants';
+// import { CounterType } from '../lib/mtgLifeConstants';
 import { getRoomShortId } from '../lib/utilities';
 
 export async function createPlayer(player: DPlayer): Promise<string> {
