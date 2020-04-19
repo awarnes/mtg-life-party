@@ -14,19 +14,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 // Icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BrushIcon from '@material-ui/icons/Brush';
 import CloseIcon from '@material-ui/icons/Close';
+
 // MTG Life Party
 import { IPlayerCardProps } from '../lib/mtgLifeInterfaces';
 import { colorStyles } from '../lib/mtgLifeConstants';
 import DamageCounter from '../components/DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
 import { getGathererURL } from '../lib/utilities';
-import { removePlayerFromRoom } from '../data/connection';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 // TODO: The fucking CSS sucks.

@@ -5,7 +5,6 @@ import Home from './containers/Home';
 import Room from './containers/Room';
 import Navigation from './containers/Navigation';
 
-import { DRoom } from './data/DRoom';
 import { IAppState, IPlayer, IRoom } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
 import * as conn from './data/connection';
