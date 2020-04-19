@@ -2,6 +2,7 @@
 export interface IAppState {
   roomShortId?: string;
   players: IPlayer[];
+  room?: IRoom;
 }
 
 export interface IPlayer {
@@ -13,6 +14,12 @@ export interface IPlayer {
   commanderDamage?: Array<ICommanderDamage>;
   poisonCounters?: number;
   colorTheme?: string;
+}
+
+export interface IRoom {
+  roomId: string;
+  roomShortId: string;
+  players: string[];
 }
 
 export interface ICommanderDamage {
@@ -38,6 +45,7 @@ export interface IHomeProps {
 export interface IRoomProps {
   routeProps: any;
   players: Array<IPlayer>;
+  room: IRoom | undefined;
   decreaseLife: (playerId?: string) => void;
   increaseLife: (playerId?: string) => void;
   decreasePoisonCounters: (playerId?: string) => void;
@@ -45,7 +53,10 @@ export interface IRoomProps {
   decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
-  updatePlayerState: (playerData: any) => void;
+  updatePlayerState: (playerData: IPlayer) => void;
+  updateRoomState: (roomData: IRoom) => void;
+  updateRoomId: (newRoomId: string) => void;
+  deletePlayer: (playerId: string) => void;
   classes: any;
 }
 
@@ -58,12 +69,14 @@ export interface IPlayerCardProps {
   decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  commandersInRoom: string[];
+  deletePlayer: (playerId: string) => void;
 }
 
 export interface IDamageCounterProps {
   playerId?: string;
+  commanderName?: string;
   damageCount?: number;
-  // counterFocus: CounterFocus; See below, probably not needed.
   increaseDamageCount: (playerId: string, commanderName?: string) => void;
   decreaseDamageCount: (playerId: string, commanderName?: string) => void;
   counterSize: number;
@@ -77,6 +90,7 @@ export interface IAdditionalDamageExpanderProps {
   decreaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  commandersInRoom: string[];
 }
 
 export interface ICounterColors {
@@ -87,7 +101,6 @@ export interface ICounterColors {
 export interface INavigationProps {
   roomShortId: any;
   history: any;
-  classes: any;
 }
 
 export interface INavBarProps {

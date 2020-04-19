@@ -1,11 +1,13 @@
-class DRoom {
+import { IRoom } from '../lib/mtgLifeInterfaces';
+
+class DRoom implements IRoom {
   roomShortId: string;
   roomId: string;
   players: string[];
 
   constructor(roomShortId: string, roomId: string, players: string[]) {
-    this.roomId = roomId;
     this.roomShortId = roomShortId;
+    this.roomId = roomId;
     this.players = players;
   }
 }

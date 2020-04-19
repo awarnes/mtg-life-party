@@ -9,7 +9,15 @@ import AddIcon from '@material-ui/icons/Add';
 import { IDamageCounterProps } from '../lib/mtgLifeInterfaces';
 
 function DamageCounter(props: IDamageCounterProps): JSX.Element {
-  const { playerId, damageCount, increaseDamageCount, decreaseDamageCount, counterColors, counterSize } = props;
+  const {
+    playerId,
+    commanderName,
+    damageCount,
+    increaseDamageCount,
+    decreaseDamageCount,
+    counterColors,
+    counterSize,
+  } = props;
 
   const classes = makeStyles((theme) => ({
     decreaseButton: {
@@ -33,7 +41,7 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
       top: '50%',
       left: '50%',
       transform: 'translate(-50%, -50%)',
-      zIndex: 10000,
+      zIndex: 2,
       height: theme.spacing(counterSize),
       width: theme.spacing(counterSize),
     },
@@ -77,19 +85,27 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
   const handleDecreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage - 1);
-    decreaseDamageCount(playerId || '');
+    if (commanderName) {
+      decreaseDamageCount(playerId || '', commanderName);
+    } else {
+      decreaseDamageCount(playerId || '');
+    }
     startTempChange();
   };
 
   const handleIncreaseClick = (): void => {
     resetTempTimer();
     setTempChange((prevDamage: number): number => prevDamage + 1);
-    increaseDamageCount(playerId || '');
+    if (commanderName) {
+      increaseDamageCount(playerId || '', commanderName);
+    } else {
+      increaseDamageCount(playerId || '');
+    }
     startTempChange();
   };
 
   return (
-    <div>
+    <div style={{ display: 'inline-block' }}>
       <IconButton className={classes.decreaseButton} onClick={handleDecreaseClick}>
         <RemoveIcon />
       </IconButton>

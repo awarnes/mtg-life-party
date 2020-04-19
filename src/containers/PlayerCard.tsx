@@ -9,6 +9,13 @@ import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 // Icons
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BrushIcon from '@material-ui/icons/Brush';
@@ -19,13 +26,18 @@ import { colorStyles } from '../lib/mtgLifeConstants';
 import DamageCounter from '../components/DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
 import { getGathererURL } from '../lib/utilities';
+import { removePlayerFromRoom } from '../data/connection';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
-
+// TODO: The fucking CSS sucks.
 const useStyles = makeStyles({
+  cardContainer: {
+    margin: '1em',
+    minWidth: '15em',
+  },
   lifeCounterContainer: {
     position: 'relative',
-    minHeight: '75pt',
+    minHeight: '10em',
   },
 });
 
@@ -34,6 +46,7 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
   const classes: any = useStyles();
   const {
     player,
+    commandersInRoom,
     decreaseLife,
     increaseLife,
     decreasePoisonCounters,
@@ -41,11 +54,17 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
     decreaseCommanderDamage,
     increaseCommanderDamage,
     createNewCommanderDamage,
+    deletePlayer,
   } = props;
 
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [cardColor, setCardColor] = useState(colors[~~(Math.random() * colors.length)]);
+  const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
+
+  const handleDeleteAlertToggle = (): void => {
+    setDeleteAlertOpen(!deleteAlertOpen);
+  };
 
   const handleSettingsToggle = (): void => {
     setSettingsOpen(!settingsOpen);
@@ -56,79 +75,111 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
     setSettingsOpen(false);
   };
 
+  const handleDeletePlayer = (): void => {
+    deletePlayer(player.uid ?? '');
+  };
+
   return (
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar aria-label="player name" style={colorStyles[cardColor]}>
-            {player.name[0].toUpperCase()}
-          </Avatar>
-        }
-        action={
-          <IconButton aria-label="color settings" onClick={handleSettingsToggle}>
-            {settingsOpen ? <CloseIcon /> : <MoreVertIcon />}
-          </IconButton>
-        }
-        title={player.name}
-        subheader={
+    <div>
+      <Card raised className={classes.cardContainer}>
+        <CardHeader
+          avatar={
+            <Avatar aria-label="player name" style={colorStyles[cardColor]}>
+              {player.name[0].toUpperCase()}
+            </Avatar>
+          }
+          action={
+            <IconButton aria-label="color settings" onClick={handleSettingsToggle}>
+              {settingsOpen ? <CloseIcon /> : <MoreVertIcon />}
+            </IconButton>
+          }
+          title={player.name}
+          subheader={
+            <div>
+              {player.partnerCommander ? (
+                <div>
+                  <pre>
+                    <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
+                      {player.commander}
+                    </Link>{' '}
+                    /{' '}
+                    <Link href={getGathererURL(player.partnerCommander)} target="_blank" rel="noopener noreferrer">
+                      {player.partnerCommander}
+                    </Link>
+                  </pre>
+                </div>
+              ) : (
+                <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
+                  {player.commander}
+                </Link>
+              )}
+            </div>
+          }
+        />
+        {settingsOpen ? (
           <div>
-            {player.partnerCommander ? (
-              <div>
-                <pre>
-                  <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
-                    {player.commander}
-                  </Link>{' '}
-                  /{' '}
-                  <Link href={getGathererURL(player.partnerCommander)} target="_blank" rel="noopener noreferrer">
-                    {player.partnerCommander}
-                  </Link>
-                </pre>
-              </div>
-            ) : (
-              <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
-                {player.commander}
-              </Link>
-            )}
-          </div>
-        }
-      />
-      {settingsOpen ? (
-        <div>
-          <CardContent>
-            <Grid container spacing={4} justify="center" alignItems="center" alignContent="center">
-              {colors.map((colorChoice: string) => (
-                <Grid key={colorChoice} item>
-                  <Fab style={colorStyles[colorChoice]} onClick={(): void => handleSetColor(colorChoice)}>
-                    <BrushIcon />
-                  </Fab>
+            <CardContent>
+              <Grid container spacing={4} justify="center" alignItems="center" alignContent="center" wrap="wrap">
+                {colors.map((colorChoice: string) => (
+                  <Grid key={colorChoice} item>
+                    <Fab style={colorStyles[colorChoice]} onClick={(): void => handleSetColor(colorChoice)}>
+                      <BrushIcon />
+                    </Fab>
+                  </Grid>
+                ))}
+                <Grid item>
+                  <Button onClick={handleDeleteAlertToggle} color="secondary">
+                    Delete Player
+                  </Button>
                 </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </div>
-      ) : (
-        <div>
-          <CardContent className={classes.lifeCounterContainer}>
-            <DamageCounter
-              playerId={player.uid}
-              damageCount={player.life}
-              decreaseDamageCount={decreaseLife}
-              increaseDamageCount={increaseLife}
-              counterColors={colorStyles[cardColor]}
-              counterSize={10}
+              </Grid>
+            </CardContent>
+          </div>
+        ) : (
+          <div>
+            <CardContent className={classes.lifeCounterContainer}>
+              <DamageCounter
+                playerId={player.uid}
+                damageCount={player.life}
+                decreaseDamageCount={decreaseLife}
+                increaseDamageCount={increaseLife}
+                counterColors={colorStyles[cardColor]}
+                counterSize={10}
+              />
+            </CardContent>
+            <AdditionalDamageExpander
+              player={player}
+              commandersInRoom={commandersInRoom}
+              decreasePoisonCounters={decreasePoisonCounters}
+              increasePoisonCounters={increasePoisonCounters}
+              decreaseCommanderDamage={decreaseCommanderDamage}
+              increaseCommanderDamage={increaseCommanderDamage}
+              createNewCommanderDamage={createNewCommanderDamage}
             />
-          </CardContent>
-          <AdditionalDamageExpander
-            player={player}
-            decreasePoisonCounters={decreasePoisonCounters}
-            increasePoisonCounters={increasePoisonCounters}
-            decreaseCommanderDamage={decreaseCommanderDamage}
-            increaseCommanderDamage={increaseCommanderDamage}
-            createNewCommanderDamage={createNewCommanderDamage}
-          />
-        </div>
-      )}
-    </Card>
+          </div>
+        )}
+      </Card>
+      <Dialog
+        open={deleteAlertOpen}
+        onClose={handleDeleteAlertToggle}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {`Are you sure you want to delete ${player.name}?`}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteAlertToggle} color="primary" autoFocus>
+            Cancel
+          </Button>
+          <Button onClick={handleDeletePlayer} color="secondary">
+            Yep!
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 

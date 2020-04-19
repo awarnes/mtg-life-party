@@ -107,57 +107,74 @@ export async function getRoom(roomUID: string): Promise<DRoom | undefined> {
   }
 }
 
-export async function addPlayerToRoom(roomToJoinShortId: string, playerUID: string): Promise<DRoom | undefined> {
-  // TODO: Fix this trash. Shoulld be much easier than this, right?!?
-  const roomToJoinId = await db
+export async function getRoomByShortId(roomShortId: string): Promise<DRoom | undefined> {
+  // TODO: Fix this trash. Should be much easier than this, right?!?
+  return await db
     .collection('rooms')
-    .where('roomShortId', '==', roomToJoinShortId)
+    .where('roomShortId', '==', roomShortId)
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.empty) {
-        throw new Error(`Unable to find room! ${roomToJoinShortId}`);
+        throw new Error(`Unable to find room! ${roomShortId}`);
       }
-      let data = '';
+      let data;
 
-      querySnapshot.forEach((doc) => (data = doc.data().roomId));
+      querySnapshot.forEach((doc) => (data = doc.data()));
 
       return data;
     });
+}
 
-  const roomRef = await db.collection('rooms').doc(roomToJoinId);
+export async function addPlayerToRoom(roomToJoinShortId: string, playerUID: string): Promise<DRoom | undefined> {
+  const roomToJoin = await getRoomByShortId(roomToJoinShortId);
+
+  const roomRef = await db.collection('rooms').doc(roomToJoin?.roomId);
 
   await roomRef.update({
     players: firebase.firestore.FieldValue.arrayUnion(playerUID),
   });
 
-  return await getRoom(roomToJoinId);
+  roomToJoin?.players.push(playerUID);
+
+  return roomToJoin;
 }
 
-export function removePlayerFromRoom(room: DRoom, playerUID: string): Promise<void> {
+export async function removePlayerFromRoom(roomShortId: string | undefined, playerUID: string): Promise<void> {
+  const room = await getRoomByShortId(roomShortId ?? '');
+
   return db
     .collection('rooms')
-    .doc(room.roomId)
+    .doc(room?.roomId)
     .update({
       players: firebase.firestore.FieldValue.arrayRemove(playerUID),
     });
 }
 
-export function listenToRoom(roomId: string, roomStateUpdateCallback: Function) {
-  return db.collection('rooms').doc(roomId).onSnapshot(roomStateUpdateCallback());
+export function listenToRoom(roomId: string, roomStateUpdateCallback: Function): void {
+  if (roomId) {
+    db.collection('rooms')
+      .doc(roomId)
+      .onSnapshot((snapshot) => roomStateUpdateCallback(snapshot.data()));
+  }
 }
 
-export function listenToPlayer(playerId: string, playerStateUpdateCallback: Function) {
-  return db.collection('players').doc(playerId).onSnapshot(playerStateUpdateCallback());
+export function listenToPlayer(playerId: string, playerStateUpdateCallback: Function): void {
+  db.collection('players')
+    .doc(playerId)
+    .onSnapshot((snapshot) => playerStateUpdateCallback(snapshot.data()));
 }
 
-export async function listenToPlayersInRoom(roomId: string, playerStateUpdateCallback: Function) {
-  const roomData = await getRoom(roomId);
-  return db
-    .collection('players')
-    .where('uid', 'in', roomData?.players)
-    .onSnapshot((querySnapshot) => {
-      querySnapshot.forEach((player) => {
-        playerStateUpdateCallback(player.data());
-      });
-    });
+export async function listenToPlayersInRoom(roomId: string, playerStateUpdateCallback: Function): Promise<void> {
+  if (roomId) {
+    const roomData = await getRoom(roomId);
+    if (roomData?.players.length) {
+      db.collection('players')
+        .where('uid', 'in', roomData?.players)
+        .onSnapshot((querySnapshot) => {
+          querySnapshot.forEach((player) => {
+            playerStateUpdateCallback(player.data());
+          });
+        });
+    }
+  }
 }
