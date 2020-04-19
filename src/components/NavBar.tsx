@@ -30,7 +30,11 @@ function NavBar(props: INavBarProps): JSX.Element {
   const handleCopy = (): void => {
     const { currentRoom } = props;
     const shortId = getRoomShortId(currentRoom);
-    navigator.clipboard.writeText(`localhost:3000?room=${shortId}`);
+    const roomAddress =
+      process.env.NODE_ENV === 'production'
+        ? `https://mtg-life-party.web.app/?room=${shortId}`
+        : `http://localhost:3000?room=${shortId}`;
+    navigator.clipboard.writeText(roomAddress);
     handleSnackbarToggle('Copied!');
   };
 
