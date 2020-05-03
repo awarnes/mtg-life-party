@@ -29,16 +29,19 @@ import { getGathererURL } from '../lib/utilities';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 // TODO: The fucking CSS sucks.
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   cardContainer: {
     margin: '1em',
     minWidth: '15em',
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '45em',
+    },
   },
   lifeCounterContainer: {
     position: 'relative',
     minHeight: '10em',
   },
-});
+}));
 
 function PlayerCard(props: IPlayerCardProps): JSX.Element {
   // Styling and Props
