@@ -15,6 +15,7 @@ export interface IPlayer {
   commanderDamage?: Array<ICommanderDamage>;
   poisonCounters?: number;
   colorTheme?: string;
+  deckListLink?: string;
 }
 
 export interface IRoom {

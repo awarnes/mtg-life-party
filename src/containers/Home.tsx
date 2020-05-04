@@ -20,6 +20,7 @@ export enum CreatePlayerField {
   name = 'name',
   commander = 'commander',
   partnerCommander = 'partnerCommander',
+  deckListLink = 'deckListLink',
 }
 
 const styles = {
@@ -58,6 +59,7 @@ class Home extends Component<IHomeProps, IHomeState> {
         life: 40,
         poisonCounters: 0,
         commanderDamage: [],
+        deckListLink: '',
       },
 
       roomToJoinShortId: shortId ? shortId.room : '',
@@ -116,6 +118,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       player.commanderDamage,
       player.poisonCounters,
       player.colorTheme,
+      player.deckListLink,
     );
     const roomId = await this.props.createRoom(newPlayer);
     this.props.history.push(`/room/${roomId}`);
@@ -184,6 +187,15 @@ class Home extends Component<IHomeProps, IHomeState> {
             <Typography>Add Partner Commander</Typography>
           </IconButton>
         )}
+        <TextField
+          margin="dense"
+          id="deckList-input"
+          label="Deck List Link"
+          type="text"
+          value={player.deckListLink}
+          onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.deckListLink, event)}
+          fullWidth
+        />
       </div>
     );
   };

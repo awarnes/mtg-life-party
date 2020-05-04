@@ -9,6 +9,7 @@ class DPlayer implements IPlayer {
   commanderDamage?: ICommanderDamage[];
   poisonCounters?: number;
   colorTheme?: string;
+  deckListLink?: string;
 
   constructor(
     name: string,
@@ -18,6 +19,7 @@ class DPlayer implements IPlayer {
     commanderDamage?: ICommanderDamage[],
     poisonCounters?: number,
     colorTheme?: string,
+    deckListLink?: string,
     uid?: string,
   ) {
     this.uid = uid ? uid : '';
@@ -28,6 +30,7 @@ class DPlayer implements IPlayer {
     this.partnerCommander = partnerCommander ? partnerCommander : '';
     this.poisonCounters = poisonCounters ? poisonCounters : 0;
     this.colorTheme = colorTheme ? colorTheme : '';
+    this.deckListLink = deckListLink ? deckListLink : '';
   }
 }
 
@@ -43,6 +46,7 @@ const playerConverter = {
       commanderDamage: player.commanderDamage,
       poisonCounters: player.poisonCounters,
       colorTheme: player.colorTheme,
+      deckListLink: player.deckListLink,
     };
   },
   fromFirestore: (snapshot: any, options: any): DPlayer => {
@@ -55,6 +59,7 @@ const playerConverter = {
       data.commanderDamage,
       data.poisonCounters,
       data.colorTheme,
+      data.deckListLink,
       data.uid,
     );
   },

@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import IconButton from '@material-ui/core/CardActionArea';
+import IconButton from '@material-ui/core/IconButton';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Avatar from '@material-ui/core/Avatar';
 import Link from '@material-ui/core/Link';
 import Fab from '@material-ui/core/Fab';
@@ -14,9 +15,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Icons
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import SettingsIcon from '@material-ui/icons/Settings';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import BrushIcon from '@material-ui/icons/Brush';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -91,9 +94,22 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
             </Avatar>
           }
           action={
-            <IconButton aria-label="color settings" onClick={handleSettingsToggle}>
-              {settingsOpen ? <CloseIcon /> : <MoreVertIcon />}
-            </IconButton>
+            <ButtonGroup>
+              {player.deckListLink ? (
+                <Tooltip title="Deck List">
+                  <Link href={player.deckListLink} target="_blank" rel="noopener noreferrer">
+                    <IconButton aria-label="deck list link">
+                      <LibraryBooksIcon />
+                    </IconButton>
+                  </Link>
+                </Tooltip>
+              ) : null}
+              <Tooltip title="Options">
+                <IconButton aria-label="color settings" onClick={handleSettingsToggle}>
+                  {settingsOpen ? <CloseIcon /> : <SettingsIcon />}
+                </IconButton>
+              </Tooltip>
+            </ButtonGroup>
           }
           title={player.name}
           subheader={
