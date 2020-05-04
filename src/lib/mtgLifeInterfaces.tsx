@@ -35,6 +35,10 @@ export interface IHomeState {
   addingPartner: boolean;
   player: IPlayer;
   roomToJoinShortId: string;
+  nameValid: boolean;
+  commanderValid: boolean;
+  deckListLinkValid: boolean;
+  roomToJoinShortIdValid: boolean;
 }
 
 export interface IHomeProps {

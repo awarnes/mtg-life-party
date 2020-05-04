@@ -61,10 +61,50 @@ class Home extends Component<IHomeProps, IHomeState> {
         commanderDamage: [],
         deckListLink: '',
       },
-
+      nameValid: true,
+      commanderValid: true,
+      deckListLinkValid: true,
+      roomToJoinShortIdValid: true,
       roomToJoinShortId: shortId ? shortId.room : '',
     };
   }
+
+  isValid = (join: boolean): boolean => {
+    const { player, roomToJoinShortId } = this.state;
+    const validity = {
+      name: true,
+      commander: true,
+      deckListLink: true,
+      roomToJoinShortId: true,
+    };
+    if (!player.name) {
+      validity.name = false;
+    }
+    if (!player.commander) {
+      validity.commander = false;
+    }
+    if (player && player.deckListLink && player.deckListLink.length > 0) {
+      try {
+        new URL(player?.deckListLink ?? '');
+        validity.deckListLink = true;
+      } catch (_) {
+        validity.deckListLink = false;
+      }
+    }
+
+    if (join && roomToJoinShortId.length != 6) {
+      validity.roomToJoinShortId = false;
+    }
+
+    this.setState({
+      nameValid: validity.name,
+      commanderValid: validity.commander,
+      deckListLinkValid: validity.deckListLink,
+      roomToJoinShortIdValid: validity.roomToJoinShortId,
+    });
+
+    return validity.name && validity.commander && validity.deckListLink && (!join || validity.roomToJoinShortId);
+  };
 
   handleNewModalToggle = (): void => {
     this.setState({ newModal: !this.state.newModal });
@@ -110,6 +150,7 @@ class Home extends Component<IHomeProps, IHomeState> {
 
   handleCreateNewRoom = async (): Promise<void> => {
     const { player } = this.state;
+    if (!this.isValid(false)) return;
     const newPlayer = new DPlayer(
       player.name,
       player.life,
@@ -126,6 +167,7 @@ class Home extends Component<IHomeProps, IHomeState> {
 
   handleJoinRoom = async (): Promise<void> => {
     const { player, roomToJoinShortId } = this.state;
+    if (!this.isValid(true)) return;
     const newPlayer = new DPlayer(
       player.name,
       player.life,
@@ -140,8 +182,7 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
 
   createPlayer = (focus: boolean): JSX.Element => {
-    const { player, addingPartner } = this.state;
-
+    const { player, addingPartner, nameValid, commanderValid, deckListLinkValid } = this.state;
     return (
       <div>
         <TextField
@@ -152,6 +193,8 @@ class Home extends Component<IHomeProps, IHomeState> {
           type="text"
           value={player.name}
           onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.name, event)}
+          error={!nameValid}
+          helperText="Please enter a name."
           fullWidth
         />
         <TextField
@@ -161,6 +204,8 @@ class Home extends Component<IHomeProps, IHomeState> {
           type="text"
           value={player.commander}
           onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.commander, event)}
+          error={!commanderValid}
+          helperText="Please enter a commander."
           fullWidth
         />
         {addingPartner ? (
@@ -194,6 +239,8 @@ class Home extends Component<IHomeProps, IHomeState> {
           type="text"
           value={player.deckListLink}
           onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.deckListLink, event)}
+          error={!deckListLinkValid}
+          helperText="Please enter a complete URL (including http/https)."
           fullWidth
         />
       </div>
@@ -201,7 +248,7 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
 
   render(): JSX.Element {
-    const { newModal, joinModal, roomToJoinShortId } = this.state;
+    const { newModal, joinModal, roomToJoinShortId, roomToJoinShortIdValid } = this.state;
     const { classes } = this.props;
     return (
       <div className={classes.homeContainer}>
@@ -271,6 +318,8 @@ class Home extends Component<IHomeProps, IHomeState> {
               type="text"
               value={roomToJoinShortId}
               onChange={this.handleRoomToJoinShortIdChange}
+              error={!roomToJoinShortIdValid}
+              helperText="Please enter a six (6) character room ID."
               fullWidth
             />
             {this.createPlayer(false)}
