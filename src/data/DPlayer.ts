@@ -1,11 +1,11 @@
-import { IPlayer, ICommanderDamage } from '../lib/mtgLifeInterfaces';
+import { IPlayer, ICommanderDamage, ICommander } from '../lib/mtgLifeInterfaces';
 
 class DPlayer implements IPlayer {
   uid?: string;
   name: string;
   life: number;
-  commander: string;
-  partnerCommander?: string;
+  commander: ICommander;
+  partnerCommander?: ICommander;
   commanderDamage?: ICommanderDamage[];
   poisonCounters?: number;
   colorTheme?: string;
@@ -14,8 +14,8 @@ class DPlayer implements IPlayer {
   constructor(
     name: string,
     life: number,
-    commander: string,
-    partnerCommander?: string,
+    commander: ICommander,
+    partnerCommander?: ICommander,
     commanderDamage?: ICommanderDamage[],
     poisonCounters?: number,
     colorTheme?: string,
@@ -27,7 +27,7 @@ class DPlayer implements IPlayer {
     this.life = life;
     this.commander = commander;
     this.commanderDamage = commanderDamage ? commanderDamage : [];
-    this.partnerCommander = partnerCommander ? partnerCommander : '';
+    this.partnerCommander = partnerCommander ? partnerCommander : {};
     this.poisonCounters = poisonCounters ? poisonCounters : 0;
     this.colorTheme = colorTheme ? colorTheme : '';
     this.deckListLink = deckListLink ? deckListLink : '';

@@ -10,12 +10,17 @@ export interface IPlayer {
   uid?: string;
   name: string;
   life: number;
-  commander: string;
-  partnerCommander?: string;
+  commander: ICommander;
+  partnerCommander?: ICommander;
   commanderDamage?: Array<ICommanderDamage>;
   poisonCounters?: number;
   colorTheme?: string;
   deckListLink?: string;
+}
+
+export interface ICommander {
+  name?: string;
+  scryfallOracleId?: string;
 }
 
 export interface IRoom {

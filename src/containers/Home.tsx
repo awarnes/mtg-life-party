@@ -12,9 +12,11 @@ import Grid from '@material-ui/core/Grid';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
-import { IHomeState, IHomeProps } from '../lib/mtgLifeInterfaces';
+import { Autocomplete } from '@material-ui/lab';
+import { IHomeState, IHomeProps, ICommander } from '../lib/mtgLifeInterfaces';
 import { DPlayer } from '../data/DPlayer';
 import { parseQuery } from '../lib/utilities';
+import commanderData from '../data/commanderData.json';
 
 export enum CreatePlayerField {
   name = 'name',
@@ -54,8 +56,8 @@ class Home extends Component<IHomeProps, IHomeState> {
       player: {
         uid: '',
         name: '',
-        commander: '',
-        partnerCommander: '',
+        commander: {},
+        partnerCommander: {},
         life: 40,
         poisonCounters: 0,
         commanderDamage: [],
@@ -92,7 +94,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       }
     }
 
-    if (join && roomToJoinShortId.length != 6) {
+    if (join && roomToJoinShortId.length !== 6) {
       validity.roomToJoinShortId = false;
     }
 
@@ -114,8 +116,8 @@ class Home extends Component<IHomeProps, IHomeState> {
     const clearedPlayer = {
       uid: '',
       name: '',
-      commander: '',
-      partnerCommander: '',
+      commander: {},
+      partnerCommander: {},
       life: 40,
       poisonCounters: 0,
       commanderDamage: [],
@@ -128,7 +130,13 @@ class Home extends Component<IHomeProps, IHomeState> {
     this.setState({ joinModal: !this.state.joinModal });
   };
 
-  handleUpdatePlayer = (field: CreatePlayerField, event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  handleUpdatePlayer = (
+    field: CreatePlayerField,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any,
+  ): void => {
+    if (field === CreatePlayerField.commander || field === CreatePlayerField.partnerCommander) {
+      event = { target: { value: event } };
+    }
     const { player } = this.state;
     const newPlayer = Object.assign({}, player, { [field]: event.target.value });
     this.setState({ player: newPlayer });
@@ -197,17 +205,25 @@ class Home extends Component<IHomeProps, IHomeState> {
           helperText="Please enter a name."
           fullWidth
         />
-        <TextField
-          margin="dense"
-          id="commander-input"
-          label="Commander"
-          type="text"
+        <Autocomplete
+          options={commanderData}
+          getOptionLabel={(commander: ICommander): string => commander.name!}
           value={player.commander}
-          onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.commander, event)}
-          error={!commanderValid}
-          helperText="Please enter a commander."
-          fullWidth
+          onChange={(_: any, newValue: any): void => this.handleUpdatePlayer(CreatePlayerField.commander, newValue)}
+          renderInput={(params) => (
+            <TextField
+              margin="dense"
+              id="commander-input"
+              label="Commander"
+              type="text"
+              error={!commanderValid}
+              helperText="Please enter a commander."
+              fullWidth
+              {...params}
+            />
+          )}
         />
+
         {addingPartner ? (
           <Grid container spacing={1} alignItems="flex-end">
             <Grid item>
@@ -216,13 +232,26 @@ class Home extends Component<IHomeProps, IHomeState> {
               </IconButton>
             </Grid>
             <Grid item>
-              <TextField
-                autoFocus
-                id="partner-commander-input"
-                label="Partner Commander"
+              <Autocomplete
+                options={commanderData}
+                getOptionLabel={(commander: ICommander): string => commander.name!}
                 value={player.partnerCommander}
-                onChange={(event): void => this.handleUpdatePlayer(CreatePlayerField.partnerCommander, event)}
-                fullWidth
+                onChange={(_: any, newValue: any): void =>
+                  this.handleUpdatePlayer(CreatePlayerField.partnerCommander, newValue)
+                }
+                renderInput={(params) => (
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="partner-commander-input"
+                    label="Partner Commander"
+                    type="text"
+                    error={!commanderValid}
+                    helperText="Please enter a partner commander."
+                    fullWidth
+                    {...params}
+                  />
+                )}
               />
             </Grid>
           </Grid>

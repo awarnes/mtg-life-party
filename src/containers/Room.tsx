@@ -43,7 +43,7 @@ class Room extends Component<IRoomProps> {
     } = this.props;
 
     const commandersInRoom = players.flatMap((player) =>
-      player.partnerCommander ? [player.commander, player.partnerCommander] : player.commander,
+      player.partnerCommander ? [player.commander.name!, player.partnerCommander.name!] : player.commander.name!,
     );
 
     return (

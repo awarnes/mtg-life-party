@@ -128,7 +128,7 @@ function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.El
                   >
                     <MenuItem />
                     {possibleNewCommanders.map((commander) => (
-                      <MenuItem key={commander} value={commander}>
+                      <MenuItem key={`${commander}-${Math.random()}`} value={commander}>
                         {commander}
                       </MenuItem>
                     ))}

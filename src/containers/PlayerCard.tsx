@@ -28,7 +28,8 @@ import { IPlayerCardProps } from '../lib/mtgLifeInterfaces';
 import { colorStyles } from '../lib/mtgLifeConstants';
 import DamageCounter from '../components/DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
-import { getGathererURL } from '../lib/utilities';
+import { getScryfallURL } from '../lib/utilities';
+import { Typography } from '@material-ui/core';
 
 const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 // TODO: The fucking CSS sucks.
@@ -114,21 +115,33 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
           title={player.name}
           subheader={
             <div>
-              {player.partnerCommander ? (
+              {player.partnerCommander?.name ? (
                 <div>
-                  <pre>
-                    <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
-                      {player.commander}
+                  <Typography>
+                    <Link
+                      href={getScryfallURL(player.commander.scryfallOracleId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {player.commander.name}
                     </Link>{' '}
                     /{' '}
-                    <Link href={getGathererURL(player.partnerCommander)} target="_blank" rel="noopener noreferrer">
-                      {player.partnerCommander}
+                    <Link
+                      href={getScryfallURL(player.partnerCommander.scryfallOracleId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {player.partnerCommander.name}
                     </Link>
-                  </pre>
+                  </Typography>
                 </div>
               ) : (
-                <Link href={getGathererURL(player.commander)} target="_blank" rel="noopener noreferrer">
-                  {player.commander}
+                <Link
+                  href={getScryfallURL(player.commander.scryfallOracleId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {player.commander.name}
                 </Link>
               )}
             </div>
