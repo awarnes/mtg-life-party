@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Paper from '@material-ui/core/Paper';
 
 import Home from './containers/Home';
 import Room from './containers/Room';
@@ -221,7 +222,7 @@ class App extends Component<{}, IAppState> {
   render(): JSX.Element {
     const { players, room, snackbar } = this.state;
     return (
-      <div>
+      <Paper>
         <Router>
           <Route
             path="/"
@@ -270,7 +271,7 @@ class App extends Component<{}, IAppState> {
           message={snackbar.message}
           handleSnackbarToggle={this.handleSnackbarToggle}
         />
-      </div>
+      </Paper>
     );
   }
 }

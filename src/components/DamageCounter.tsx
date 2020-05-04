@@ -5,6 +5,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
 import Grid from '@material-ui/core/Grid';
+import { lightGreen } from '@material-ui/core/colors';
 
 import { IDamageCounterProps } from '../lib/mtgLifeInterfaces';
 
@@ -89,6 +90,17 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
     startTempChange();
   };
 
+  const shouldPulse = (): boolean => {
+    if (commanderName) {
+      return damageCount! >= 15;
+    } else if (counterColors.backgroundColor === lightGreen[500]) {
+      return damageCount! >= 7;
+    } else if (damageCount! <= 10) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <Grid container justify="center" alignItems="center">
       <Grid item>
@@ -105,7 +117,11 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
           open={tempChangeActive && tempChange !== 0}
           arrow
         >
-          <Avatar aria-label={`current count is ${damageCount}`} className={classes.countTotal} style={counterColors}>
+          <Avatar
+            aria-label={`current count is ${damageCount}`}
+            className={`${classes.countTotal} ${shouldPulse() ? 'pulseRed' : ''}`}
+            style={counterColors}
+          >
             {damageCount}
           </Avatar>
         </Tooltip>

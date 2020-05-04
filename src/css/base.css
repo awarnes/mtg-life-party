@@ -6,3 +6,16 @@ html, body, #root, #root>div {
 body {
   margin-left: 0;
 }
+
+.pulseRed {
+  animation: pulse-red-animation 2s infinite;
+}
+
+@keyframes pulse-red-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 0, 0, 0.2)
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgb(255, 0, 0, 0);
+  }
+}
