@@ -78,9 +78,14 @@ class Room extends Component<IRoomProps, IRoomState> {
     } = this.props;
 
     const commandersInRoom = players.flatMap((player) =>
-      player.partnerCommander ? [player.commander.name!, player.partnerCommander.name!] : player.commander.name!,
+      Object.keys(player.partnerCommander || {}).length > 0
+        ? [
+            { player: player.name, commander: player.commander.name!, color: player.colorTheme },
+            { player: player.name, commander: player.partnerCommander?.name!, color: player.colorTheme },
+          ]
+        : { player: player.name, commander: player.commander.name!, color: player.colorTheme },
     );
-    console.warn('DID AN UPDATED');
+
     const newPlayerCards = room?.players.length
       ? players.map((player) => (
           <PlayerCard

@@ -193,8 +193,6 @@ class App extends Component<{}, IAppState> {
   updatePlayerState = (playerData: IPlayer): void => {
     // TODO: I'm sure there's a better way to handle updating state without creating duplicates!
     const currentPlayers: IPlayer[] = [...this.state.players];
-    console.log('UPDATING PLAYER:');
-    console.log(playerData);
     const shouldUpdate = currentPlayers.filter((player) => player.uid === playerData.uid).length > 0;
     let newPlayers = [];
 

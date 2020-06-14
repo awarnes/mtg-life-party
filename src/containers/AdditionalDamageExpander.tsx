@@ -12,14 +12,11 @@ import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { makeStyles } from '@material-ui/core/styles';
-import { lightGreen, common, blue } from '@material-ui/core/colors';
+import { lightGreen, common } from '@material-ui/core/colors';
 
 import DamageCounter from '../components/DamageCounter';
+import { colorStyles } from '../lib/mtgLifeConstants';
 import { IAdditionalDamageExpanderProps } from '../lib/mtgLifeInterfaces';
-
-// TODO: Add pulsing color coded animations to poison counters and commander damage when it gets too high
-// TODO: Connect commanders to their owners so that duplication doesn't break shit
-// TODO: Connect commanders to their owners for color coordination
 
 const useStyles = makeStyles({
   poisonCountersContainer: {
@@ -80,7 +77,8 @@ function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.El
   };
 
   const possibleNewCommanders = commandersInRoom.filter(
-    (commander) => !player.commanderDamage?.map((damage) => damage.name).includes(commander),
+    (commander) =>
+      !player.commanderDamage?.map((damage) => damage.name).includes(`${commander.commander} (${commander.player})`),
   );
 
   return (
@@ -128,8 +126,11 @@ function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.El
                   >
                     <MenuItem />
                     {possibleNewCommanders.map((commander) => (
-                      <MenuItem key={`${commander}-${Math.random()}`} value={commander}>
-                        {commander}
+                      <MenuItem
+                        key={`${commander.commander}-${commander.player}-${Math.random()}`}
+                        value={`${commander.commander} (${commander.player})`}
+                      >
+                        {`${commander.commander} (${commander.player})`}
                       </MenuItem>
                     ))}
                   </Select>
@@ -139,33 +140,38 @@ function AdditionalDamageExpander(props: IAdditionalDamageExpanderProps): JSX.El
             </Grid>
           ) : null}
           {player.commanderDamage
-            ? player.commanderDamage.map((damage) => (
-                <Grid
-                  container
-                  key={`${player.uid}-${damage.name}`}
-                  alignItems="center"
-                  justify="space-between"
-                  className={classes.commanderDamageContainer}
-                >
-                  <Grid item className={classes.commanderLabel}>
-                    <Typography variant="body2">{damage.name}:</Typography>
+            ? player.commanderDamage.map((damage) => {
+                const commander = commandersInRoom.filter(
+                  (commander) => `${commander.commander} (${commander.player})` === damage.name,
+                )[0];
+
+                const commanderColor = commander ? commander.color : 'blue';
+
+                return (
+                  <Grid
+                    container
+                    key={`${player.uid}-${damage.name}`}
+                    alignItems="center"
+                    justify="space-between"
+                    className={classes.commanderDamageContainer}
+                  >
+                    <Grid item className={classes.commanderLabel}>
+                      <Typography variant="body2">{damage.name}:</Typography>
+                    </Grid>
+                    <Grid item className={classes.commanderDamage}>
+                      <DamageCounter
+                        playerId={player.uid}
+                        commanderName={damage.name}
+                        damageCount={damage.amount}
+                        decreaseDamageCount={decreaseCommanderDamage}
+                        increaseDamageCount={increaseCommanderDamage}
+                        counterColors={colorStyles[commanderColor]}
+                        counterSize={5}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item className={classes.commanderDamage}>
-                    <DamageCounter
-                      playerId={player.uid}
-                      commanderName={damage.name}
-                      damageCount={damage.amount}
-                      decreaseDamageCount={decreaseCommanderDamage}
-                      increaseDamageCount={increaseCommanderDamage}
-                      counterColors={{
-                        color: common.black,
-                        backgroundColor: blue[500],
-                      }}
-                      counterSize={5}
-                    />
-                  </Grid>
-                </Grid>
-              ))
+                );
+              })
             : null}
         </Grid>
       </ExpansionPanelDetails>

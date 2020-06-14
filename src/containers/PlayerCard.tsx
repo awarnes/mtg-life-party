@@ -69,12 +69,11 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
   const [, drag] = useDrag({
     item: { type: DNDItemTypes.CARD, key: player.uid },
   });
-  console.log('COLOR THEME: ', player.colorTheme);
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [cardColor, setCardColor] = useState(player.colorTheme || 'blue');
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
-  console.log('CARD COLOR: ', cardColor);
+
   const handleDeleteAlertToggle = (): void => {
     setDeleteAlertOpen(!deleteAlertOpen);
   };

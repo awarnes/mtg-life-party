@@ -93,7 +93,7 @@ export interface IPlayerCardProps {
   increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
   updatePlayerColor: (playerId?: string, color?: string) => void;
-  commandersInRoom: string[];
+  commandersInRoom: Array<any>;
   deletePlayer: (playerId: string) => void;
 }
 
@@ -114,7 +114,7 @@ export interface IAdditionalDamageExpanderProps {
   decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
-  commandersInRoom: string[];
+  commandersInRoom: Array<any>;
 }
 
 export interface ICounterColors {
