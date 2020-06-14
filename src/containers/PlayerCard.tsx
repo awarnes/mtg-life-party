@@ -17,6 +17,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import Tooltip from '@material-ui/core/Tooltip';
 
+// React DND
+import { useDrag } from 'react-dnd';
+
 // Icons
 import SettingsIcon from '@material-ui/icons/Settings';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
@@ -25,7 +28,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 // MTG Life Party
 import { IPlayerCardProps } from '../lib/mtgLifeInterfaces';
-import { colorStyles } from '../lib/mtgLifeConstants';
+import { colorStyles, DNDItemTypes } from '../lib/mtgLifeConstants';
 import DamageCounter from '../components/DamageCounter';
 import AdditionalDamageExpander from './AdditionalDamageExpander';
 import { getScryfallURL } from '../lib/utilities';
@@ -63,6 +66,13 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
     deletePlayer,
   } = props;
 
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: DNDItemTypes.CARD, key: player.uid },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [cardColor, setCardColor] = useState(colors[~~(Math.random() * colors.length)]);
@@ -86,7 +96,7 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
   };
 
   return (
-    <div>
+    <div ref={drag}>
       <Card raised className={classes.cardContainer}>
         <CardHeader
           avatar={

@@ -71,6 +71,17 @@ export interface IRoomProps {
   classes: any;
 }
 
+export interface IRoomState {
+  playerCards: Array<any>;
+  cardOrder: string[];
+}
+
+export interface IDraggableRoomProps {
+  playerCard: any;
+  droppableId: number;
+  movePlayer: (cardId: string, droppableId: number) => void;
+}
+
 export interface IPlayerCardProps {
   player: IPlayer;
   increaseLife: (playerId?: string, amountToChange?: number) => void;
@@ -112,12 +123,19 @@ export interface ICounterColors {
 export interface INavigationProps {
   roomShortId: any;
   history: any;
+  // endPlayerTurn: () => void;
   handleSnackbarToggle: (message?: string) => void;
 }
 
 export interface INavBarProps {
   currentRoom: string;
   classes: any;
+  // endPlayerTurn: () => void;
   returnHome: () => void;
   handleSnackbarToggle: (message?: string) => void;
+}
+
+export interface IShotClockProps {
+  classes: any;
+  // endPlayerTurn: () => void;
 }

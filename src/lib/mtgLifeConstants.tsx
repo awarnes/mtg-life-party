@@ -36,3 +36,7 @@ export enum CounterType {
   poisonCounter = 'poisonCounter',
   commanderDamage = 'commanderDamage',
 }
+
+export const DNDItemTypes = {
+  CARD: 'playerCard',
+};

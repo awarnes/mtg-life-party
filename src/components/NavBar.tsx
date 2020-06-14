@@ -5,6 +5,7 @@ import HomeIcon from '@material-ui/icons/Home';
 
 import { INavBarProps } from '../lib/mtgLifeInterfaces';
 import { getRoomShortId } from '../lib/utilities';
+import ShotClock from './ShotClock';
 
 const styles = {
   navBarContainer: {
@@ -45,6 +46,7 @@ function NavBar(props: INavBarProps): JSX.Element {
           <IconButton color="inherit" onClick={returnHome}>
             <HomeIcon />
           </IconButton>
+          <ShotClock />
           {currentRoom ? (
             <Button onClick={handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
               Room: {currentRoom}
