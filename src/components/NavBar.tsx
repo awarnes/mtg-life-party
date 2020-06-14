@@ -26,7 +26,7 @@ const styles = {
 };
 
 function NavBar(props: INavBarProps): JSX.Element {
-  const { currentRoom, classes, returnHome, handleSnackbarToggle } = props;
+  const { currentRoom, classes, returnHome, handleSnackbarToggle, timerState, endPlayerTurn } = props;
 
   const handleCopy = (): void => {
     const { currentRoom } = props;
@@ -46,7 +46,7 @@ function NavBar(props: INavBarProps): JSX.Element {
           <IconButton color="inherit" onClick={returnHome}>
             <HomeIcon />
           </IconButton>
-          <ShotClock />
+          <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} />
           {currentRoom ? (
             <Button onClick={handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
               Room: {currentRoom}

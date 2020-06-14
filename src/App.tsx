@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment-timezone';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
@@ -232,6 +233,21 @@ class App extends Component<{}, IAppState> {
     this.setState({ players: newPlayers });
   };
 
+  endPlayerTurn = (): void => {
+    const { room } = this.state;
+    const lastStart = moment.utc(room?.timerState.lastStart);
+    const currentTime = moment.utc().tz(moment.tz.guess()).utc();
+    const history = currentTime.diff(lastStart, 'seconds').toString();
+
+    const newRoom = Object.assign({}, room, {
+      timerState: { lastStart: currentTime.toISOString(), history: [...room?.timerState.history].concat(history) },
+    });
+
+    this.setState({ room: newRoom }, () => {
+      conn.updateRoom(this.state.room!);
+    });
+  };
+
   render(): JSX.Element {
     const { players, room, snackbar } = this.state;
     return (
@@ -240,7 +256,13 @@ class App extends Component<{}, IAppState> {
           <Route
             path="/"
             render={(props): JSX.Element => (
-              <Navigation {...props} roomShortId={room?.roomShortId} handleSnackbarToggle={this.handleSnackbarToggle} />
+              <Navigation
+                {...props}
+                roomShortId={room?.roomShortId}
+                handleSnackbarToggle={this.handleSnackbarToggle}
+                timerState={room?.timerState || { lastStart: '', history: [] }}
+                endPlayerTurn={this.endPlayerTurn}
+              />
             )}
           />
 

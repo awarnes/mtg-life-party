@@ -27,6 +27,7 @@ export interface IRoom {
   roomId: string;
   roomShortId: string;
   players: string[];
+  timerState: ITimer;
 }
 
 export interface ICommanderDamage {
@@ -125,19 +126,27 @@ export interface ICounterColors {
 export interface INavigationProps {
   roomShortId: any;
   history: any;
-  // endPlayerTurn: () => void;
+  timerState: ITimer;
+  endPlayerTurn: () => void;
   handleSnackbarToggle: (message?: string) => void;
 }
 
 export interface INavBarProps {
   currentRoom: string;
   classes: any;
-  // endPlayerTurn: () => void;
+  timerState: ITimer;
+  endPlayerTurn: () => void;
   returnHome: () => void;
   handleSnackbarToggle: (message?: string) => void;
 }
 
 export interface IShotClockProps {
+  timerState: ITimer;
   classes: any;
-  // endPlayerTurn: () => void;
+  endPlayerTurn: () => void;
+}
+
+export interface ITimer {
+  lastStart: string;
+  history: string[];
 }

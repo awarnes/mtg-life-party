@@ -66,7 +66,7 @@ export async function createRoom(): Promise<string> {
     .collection('rooms')
     .withConverter(roomConverter)
     .doc(newRoom.id)
-    .set(new DRoom(getRoomShortId(newRoom.id), newRoom.id, []));
+    .set(new DRoom(getRoomShortId(newRoom.id), newRoom.id, [], { lastStart: '', history: [] }));
 
   return newRoom.id;
 }

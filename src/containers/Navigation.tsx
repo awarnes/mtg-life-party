@@ -10,11 +10,17 @@ class Navigation extends Component<INavigationProps, {}> {
   };
 
   render(): JSX.Element {
-    const { roomShortId, handleSnackbarToggle } = this.props;
+    const { roomShortId, handleSnackbarToggle, timerState, endPlayerTurn } = this.props;
 
     return (
       <div style={{ height: '5em' }}>
-        <NavBar returnHome={this.returnHome} currentRoom={roomShortId} handleSnackbarToggle={handleSnackbarToggle} />
+        <NavBar
+          returnHome={this.returnHome}
+          timerState={timerState}
+          endPlayerTurn={endPlayerTurn}
+          currentRoom={roomShortId}
+          handleSnackbarToggle={handleSnackbarToggle}
+        />
       </div>
     );
   }

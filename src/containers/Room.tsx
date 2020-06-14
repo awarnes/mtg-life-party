@@ -28,6 +28,7 @@ class Room extends Component<IRoomProps, IRoomState> {
       turnOrder: props?.room?.players || [],
     };
   }
+
   componentDidMount(): void {
     const { routeProps, updateRoomId, updatePlayerState, updateRoomState } = this.props;
     const joinedRoom = routeProps.match.params.roomId ? routeProps.match.params.roomId : '';

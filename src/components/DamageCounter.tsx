@@ -23,9 +23,6 @@ function DamageCounter(props: IDamageCounterProps): JSX.Element {
     counterSize,
   } = props;
 
-  console.log('commanderNAME: ', commanderName);
-  console.log('color: ', counterColors);
-
   const classes = makeStyles((theme) => ({
     countTotal: {
       height: theme.spacing(counterSize),
