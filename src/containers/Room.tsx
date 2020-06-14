@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { IRoomProps, IRoomState, IPlayer } from '../lib/mtgLifeInterfaces';
+import { playerDifference } from '../lib/utilities';
 import { listenToPlayersInRoom, listenToRoom } from '../data/connection';
 import RoomDraggableSpace from '../components/RoomDraggableSpace';
 import PlayerCard from './PlayerCard';
@@ -17,16 +18,6 @@ const styles = {
     alignContent: 'flex-start',
   },
 };
-function playerDifference(playerA: IPlayer, playerB: IPlayer) {
-  return playerA !== playerB;
-}
-function difference(setA: Set<any>, setB: Set<any>): Set<any> {
-  const _difference = new Set(setA);
-  for (const elem of _difference) {
-    if ([...setB].reduce((diff, el) => diff.concat(el.key), []).includes(elem.key)) _difference.delete(elem);
-  }
-  return _difference;
-}
 
 class Room extends Component<IRoomProps, IRoomState> {
   constructor(props: IRoomProps) {
@@ -34,7 +25,7 @@ class Room extends Component<IRoomProps, IRoomState> {
 
     this.state = {
       playerCards: [],
-      cardOrder: [],
+      turnOrder: props?.room?.players || [],
     };
   }
   componentDidMount(): void {
@@ -54,6 +45,7 @@ class Room extends Component<IRoomProps, IRoomState> {
   componentDidUpdate(prevProps: any): void {
     const { playerCards } = this.state;
     const { players } = this.props;
+
     if (playerCards.length !== players.length) {
       return this.generatePlayerCards();
     }
@@ -81,15 +73,14 @@ class Room extends Component<IRoomProps, IRoomState> {
       decreaseCommanderDamage,
       increaseCommanderDamage,
       createNewCommanderDamage,
+      updatePlayerColor,
       deletePlayer,
     } = this.props;
-
-    const { playerCards, cardOrder } = this.state;
 
     const commandersInRoom = players.flatMap((player) =>
       player.partnerCommander ? [player.commander.name!, player.partnerCommander.name!] : player.commander.name!,
     );
-
+    console.warn('DID AN UPDATED');
     const newPlayerCards = room?.players.length
       ? players.map((player) => (
           <PlayerCard
@@ -103,39 +94,39 @@ class Room extends Component<IRoomProps, IRoomState> {
             decreaseCommanderDamage={decreaseCommanderDamage}
             increaseCommanderDamage={increaseCommanderDamage}
             createNewCommanderDamage={createNewCommanderDamage}
+            updatePlayerColor={updatePlayerColor}
             deletePlayer={deletePlayer}
           />
         ))
       : [];
 
-    const cardDifference = difference(new Set(newPlayerCards), new Set(playerCards));
-    if (cardDifference.size > 0) {
-      const newCardOrder = [...cardOrder].concat(Array(...cardDifference).map((card) => card.key));
-      return this.setState({ playerCards: newPlayerCards, cardOrder: newCardOrder });
-    }
-
-    this.setState({ playerCards: newPlayerCards });
+    this.setState({ playerCards: newPlayerCards, turnOrder: room?.players || [] });
   }
 
   movePlayer = (cardId: string, droppableId: number): void => {
-    const { cardOrder } = this.state;
+    const { turnOrder } = this.state;
 
-    const newCardOrder = cardOrder.filter((card: string) => card !== cardId);
+    const newTurnOrder = turnOrder.filter((card: string) => card !== cardId);
 
-    newCardOrder.splice(droppableId, 0, cardId);
+    newTurnOrder.splice(droppableId, 0, cardId);
 
-    this.setState({ cardOrder: newCardOrder });
+    this.setState({ turnOrder: newTurnOrder }, () => {
+      const { room, updateRoomState } = this.props;
+
+      const newRoom = Object.assign({}, room, { players: this.state.turnOrder });
+      updateRoomState(newRoom);
+    });
   };
 
   render(): JSX.Element {
-    const { playerCards, cardOrder } = this.state;
+    const { playerCards, turnOrder } = this.state;
     const { classes } = this.props;
 
     return (
       <DndProvider backend={HTML5Backend}>
         <div style={{ flexWrap: 'wrap' }} className={classes.roomContainer}>
-          {cardOrder.length ? (
-            cardOrder.map((cardId: string, droppableIndex: number) => {
+          {turnOrder.length ? (
+            turnOrder.map((cardId: string, droppableIndex: number) => {
               const playerCard = playerCards.filter((card: any) => cardId === card.key)[0];
               return (
                 <RoomDraggableSpace

@@ -64,6 +64,7 @@ export interface IRoomProps {
   decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  updatePlayerColor: (playerId?: string, color?: string) => void;
   updatePlayerState: (playerData: IPlayer) => void;
   updateRoomState: (roomData: IRoom) => void;
   updateRoomId: (newRoomId: string) => void;
@@ -73,7 +74,7 @@ export interface IRoomProps {
 
 export interface IRoomState {
   playerCards: Array<any>;
-  cardOrder: string[];
+  turnOrder: string[];
 }
 
 export interface IDraggableRoomProps {
@@ -91,6 +92,7 @@ export interface IPlayerCardProps {
   decreaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   increaseCommanderDamage: (playerId?: string, amountToChange?: number, commanderName?: string) => void;
   createNewCommanderDamage: (playerId?: string, commanderName?: string) => void;
+  updatePlayerColor: (playerId?: string, color?: string) => void;
   commandersInRoom: string[];
   deletePlayer: (playerId: string) => void;
 }

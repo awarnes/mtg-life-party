@@ -177,10 +177,24 @@ class App extends Component<{}, IAppState> {
     });
   };
 
+  updatePlayerColor = (playerId?: string, color?: string): void => {
+    if (!playerId || !color) return;
+    const newPlayers = this.state.players.map((player) => {
+      if (player.uid === playerId) {
+        player.colorTheme = color;
+      }
+      return player;
+    });
+    this.setState({ players: newPlayers }, () => {
+      conn.updatePlayer(this.state.players.filter((player) => player.uid === playerId)[0]);
+    });
+  };
+
   updatePlayerState = (playerData: IPlayer): void => {
     // TODO: I'm sure there's a better way to handle updating state without creating duplicates!
     const currentPlayers: IPlayer[] = [...this.state.players];
-
+    console.log('UPDATING PLAYER:');
+    console.log(playerData);
     const shouldUpdate = currentPlayers.filter((player) => player.uid === playerData.uid).length > 0;
     let newPlayers = [];
 
@@ -209,6 +223,7 @@ class App extends Component<{}, IAppState> {
     this.setState({ room: newRoom, roomShortId: newRoom.roomShortId }, async () => {
       const newPlayerArray = await conn.getPlayers(this.state.room?.players ?? []);
       this.setState({ players: newPlayerArray ?? [] });
+      conn.updateRoom(newRoom);
     });
   };
 
@@ -255,6 +270,7 @@ class App extends Component<{}, IAppState> {
                 decreaseCommanderDamage={this.decreaseCommanderDamage}
                 increaseCommanderDamage={this.increaseCommanderDamage}
                 createNewCommanderDamage={this.createNewCommanderDamage}
+                updatePlayerColor={this.updatePlayerColor}
                 deletePlayer={this.handleRemovePlayerFromRoom}
                 updatePlayerState={this.updatePlayerState}
                 updateRoomState={this.updateRoomState}

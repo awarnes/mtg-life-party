@@ -71,6 +71,10 @@ export async function createRoom(): Promise<string> {
   return newRoom.id;
 }
 
+export async function updateRoom(newRoom: DRoom): Promise<void> {
+  return db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId).set(newRoom);
+}
+
 export async function getPlayer(playerUID: string): Promise<DPlayer | undefined> {
   const player = await db.collection('players').withConverter(playerConverter).doc(playerUID).get();
 

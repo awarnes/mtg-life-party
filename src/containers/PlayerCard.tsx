@@ -34,7 +34,6 @@ import AdditionalDamageExpander from './AdditionalDamageExpander';
 import { getScryfallURL } from '../lib/utilities';
 import { Typography } from '@material-ui/core';
 
-const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
 // TODO: The fucking CSS sucks.
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
@@ -63,21 +62,19 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
     decreaseCommanderDamage,
     increaseCommanderDamage,
     createNewCommanderDamage,
+    updatePlayerColor,
     deletePlayer,
   } = props;
 
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag] = useDrag({
     item: { type: DNDItemTypes.CARD, key: player.uid },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
   });
-
+  console.log('COLOR THEME: ', player.colorTheme);
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [cardColor, setCardColor] = useState(colors[~~(Math.random() * colors.length)]);
+  const [cardColor, setCardColor] = useState(player.colorTheme || 'blue');
   const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
-
+  console.log('CARD COLOR: ', cardColor);
   const handleDeleteAlertToggle = (): void => {
     setDeleteAlertOpen(!deleteAlertOpen);
   };
@@ -88,12 +85,17 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
 
   const handleSetColor = (colorChoice: string): void => {
     setCardColor(colorChoice);
+    updatePlayerColor(player.uid, colorChoice);
     setSettingsOpen(false);
   };
 
   const handleDeletePlayer = (): void => {
     deletePlayer(player.uid ?? '');
   };
+
+  if (player.colorTheme && cardColor !== player.colorTheme) {
+    setCardColor(player.colorTheme);
+  }
 
   return (
     <div ref={drag}>
@@ -161,7 +163,7 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
           <div>
             <CardContent>
               <Grid container spacing={4} justify="center" alignItems="center" alignContent="center" wrap="wrap">
-                {colors.map((colorChoice: string) => (
+                {Object.keys(colorStyles).map((colorChoice: string) => (
                   <Grid key={colorChoice} item>
                     <Fab style={colorStyles[colorChoice]} onClick={(): void => handleSetColor(colorChoice)}>
                       <BrushIcon />

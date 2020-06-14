@@ -13,9 +13,12 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
 import { Autocomplete } from '@material-ui/lab';
+
 import { IHomeState, IHomeProps, ICommander } from '../lib/mtgLifeInterfaces';
-import { DPlayer } from '../data/DPlayer';
+import { colorStyles } from '../lib/mtgLifeConstants';
 import { parseQuery } from '../lib/utilities';
+
+import { DPlayer } from '../data/DPlayer';
 import commanderData from '../data/commanderData.json';
 
 export enum CreatePlayerField {
@@ -62,6 +65,7 @@ class Home extends Component<IHomeProps, IHomeState> {
         poisonCounters: 0,
         commanderDamage: [],
         deckListLink: '',
+        colorTheme: Object.keys(colorStyles)[~~(Math.random() * Object.keys(colorStyles).length)],
       },
       nameValid: true,
       commanderValid: true,

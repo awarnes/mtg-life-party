@@ -19,3 +19,29 @@ body {
     box-shadow: 0 0 0 20px rgb(255, 0, 0, 0);
   }
 }
+
+.pulseWhite {
+  animation: pulse-white-animation 2s infinite;
+}
+
+@keyframes pulse-white-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.8)
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgb(255, 255, 255, 0);
+  }
+}
+
+.pulseBlack {
+  animation: pulse-black-animation 2s infinite;
+}
+
+@keyframes pulse-black-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.8)
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgb(0, 0, 0, 0);
+  }
+}
