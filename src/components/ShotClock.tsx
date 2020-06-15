@@ -24,6 +24,25 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     setIsActive(true);
   }
 
+  let timerId: any;
+  function shotClockDebounce(func: any, delay: number): void {
+    clearInterval(timerId);
+    timerId = setTimeout(func, delay);
+  }
+
+  // TODO: Keep watching out for endPlayerTurn to break things :grimacing:
+  // function shotClockThrottle(func: any, delay: number): void {
+  //   if (timerId) {
+  //     return;
+  //   }
+
+  //   timerId = setTimeout(function () {
+  //     func();
+
+  //     timerId = undefined;
+  //   }, delay);
+  // }
+
   useEffect(() => {
     let interval: any = null;
     if (isActive) {
@@ -53,7 +72,9 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     <div className={classes.shotClock}>
       <ButtonGroup>
         <Button>{displayTime(seconds)}</Button>
-        <Button onClick={handleEndPlayerTurn}>{timerState.history.length > 0 ? 'End Turn' : 'Start Game'}</Button>
+        <Button onClick={(): void => shotClockDebounce(handleEndPlayerTurn, 750)}>
+          {timerState.history.length > 0 ? 'End Turn' : 'Start Game'}
+        </Button>
       </ButtonGroup>
       {
         <div style={{ justifyContent: 'space-between', display: 'flex' }}>
