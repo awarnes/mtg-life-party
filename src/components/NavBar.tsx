@@ -46,7 +46,7 @@ function NavBar(props: INavBarProps): JSX.Element {
           <IconButton color="inherit" onClick={returnHome}>
             <HomeIcon />
           </IconButton>
-          <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} />
+          {currentRoom ? <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} /> : null}
           {currentRoom ? (
             <Button onClick={handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
               Room: {currentRoom}

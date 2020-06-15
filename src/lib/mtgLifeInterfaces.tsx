@@ -81,6 +81,7 @@ export interface IRoomState {
 export interface IDraggableRoomProps {
   playerCard: any;
   droppableId: number;
+  activeTurn: boolean;
   movePlayer: (cardId: string, droppableId: number) => void;
 }
 
@@ -129,6 +130,7 @@ export interface INavigationProps {
   timerState: ITimer;
   endPlayerTurn: () => void;
   handleSnackbarToggle: (message?: string) => void;
+  returnHomeState: () => void;
 }
 
 export interface INavBarProps {

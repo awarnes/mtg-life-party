@@ -248,6 +248,18 @@ class App extends Component<{}, IAppState> {
     });
   };
 
+  returnHomeState = (): void => {
+    this.setState({
+      players: [],
+      roomShortId: '',
+      room: undefined,
+      snackbar: {
+        open: false,
+        message: '',
+      },
+    });
+  };
+
   render(): JSX.Element {
     const { players, room, snackbar } = this.state;
     return (
@@ -262,6 +274,7 @@ class App extends Component<{}, IAppState> {
                 handleSnackbarToggle={this.handleSnackbarToggle}
                 timerState={room?.timerState || { lastStart: '', history: [] }}
                 endPlayerTurn={this.endPlayerTurn}
+                returnHomeState={this.returnHomeState}
               />
             )}
           />

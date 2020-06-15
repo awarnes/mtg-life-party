@@ -126,7 +126,7 @@ class Room extends Component<IRoomProps, IRoomState> {
 
   render(): JSX.Element {
     const { playerCards, turnOrder } = this.state;
-    const { classes } = this.props;
+    const { classes, room } = this.props;
 
     return (
       <DndProvider backend={HTML5Backend}>
@@ -134,11 +134,15 @@ class Room extends Component<IRoomProps, IRoomState> {
           {turnOrder.length ? (
             turnOrder.map((cardId: string, droppableIndex: number) => {
               const playerCard = playerCards.filter((card: any) => cardId === card.key)[0];
+              const activeTurn =
+                (room?.timerState.history.length || 0) % turnOrder.length === droppableIndex &&
+                !!room?.timerState.lastStart!;
               return (
                 <RoomDraggableSpace
                   key={`drop-space-${droppableIndex}`}
                   playerCard={playerCard}
                   droppableId={droppableIndex}
+                  activeTurn={activeTurn}
                   movePlayer={this.movePlayer}
                 />
               );

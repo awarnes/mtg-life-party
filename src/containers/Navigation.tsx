@@ -6,6 +6,7 @@ import { INavigationProps } from '../lib/mtgLifeInterfaces';
 
 class Navigation extends Component<INavigationProps, {}> {
   returnHome = (): void => {
+    this.props.returnHomeState();
     this.props.history.push('/');
   };
 

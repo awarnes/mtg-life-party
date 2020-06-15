@@ -45,3 +45,16 @@ body {
     box-shadow: 0 0 0 20px rgb(0, 0, 0, 0);
   }
 }
+
+.pulseGrey {
+  animation: pulse-grey-animation 2s infinite;
+}
+
+@keyframes pulse-grey-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(128, 128, 128, 0.8)
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgb(128, 128, 128, 0);
+  }
+}

@@ -3,6 +3,7 @@ import { ButtonGroup, Button, withStyles } from '@material-ui/core';
 
 import { IShotClockProps } from '../lib/mtgLifeInterfaces';
 import moment from 'moment-timezone';
+
 const styles = {
   shotClock: {},
 };
@@ -12,6 +13,10 @@ function ShotClock(props: IShotClockProps): JSX.Element {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(timerState.history.length > 0);
   const lastStartMoment = moment.utc(timerState.lastStart);
+
+  if (timerState.history.length > 0 && !isActive) {
+    setIsActive(true);
+  }
 
   useEffect(() => {
     let interval: any = null;
@@ -32,11 +37,17 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     endPlayerTurn();
   }
 
+  function displayTime(time: number): string {
+    const minutes = Math.trunc(time / 60);
+    const secondAmount = time - minutes * 60;
+    return `${minutes}:${secondAmount < 10 ? `0${secondAmount}` : secondAmount}`;
+  }
+
   return (
     <div className={classes.shotClock}>
       <ButtonGroup>
-        <Button>{moment(seconds, 'seconds').format('mm:ss')}</Button>
-        <Button onClick={handleEndPlayerTurn}>End Turn</Button>
+        <Button>{displayTime(seconds)}</Button>
+        <Button onClick={handleEndPlayerTurn}>{timerState.history.length > 0 ? 'End Turn' : 'Start Game'}</Button>
       </ButtonGroup>
     </div>
   );
