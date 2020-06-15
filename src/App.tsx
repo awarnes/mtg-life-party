@@ -8,7 +8,7 @@ import Room from './containers/Room';
 import Navigation from './containers/Navigation';
 import PositionedSnackbar from './components/PositionedSnackbar';
 
-import { IAppState, IPlayer, IRoom } from './lib/mtgLifeInterfaces';
+import { IAppState, IPlayer, IRoom, IRoomSettings } from './lib/mtgLifeInterfaces';
 import { getRoomShortId } from './lib/utilities';
 import * as conn from './data/connection';
 
@@ -30,9 +30,9 @@ class App extends Component<{}, IAppState> {
     };
   }
 
-  createRoom = async (player: IPlayer): Promise<string> => {
+  createRoom = async (player: IPlayer, settings: IRoomSettings): Promise<string> => {
     console.log('Creating the room with this player: ', player);
-    const roomId = await conn.createRoom();
+    const roomId = await conn.createRoom(settings);
     await this.joinRoom(player, getRoomShortId(roomId));
     return roomId;
   };
@@ -248,6 +248,14 @@ class App extends Component<{}, IAppState> {
     });
   };
 
+  toggleUseShotClock = (): void => {
+    const { room } = this.state;
+    const newRoom = Object.assign({}, room, { useShotClock: !room?.useShotClock });
+    this.setState({ room: newRoom }, () => {
+      conn.updateRoom(this.state.room!);
+    });
+  };
+
   returnHomeState = (): void => {
     this.setState({
       players: [],
@@ -257,6 +265,26 @@ class App extends Component<{}, IAppState> {
         open: false,
         message: '',
       },
+    });
+  };
+
+  resetPlayer = (playerId: string): void => {
+    if (!playerId) return;
+    const { players } = this.state;
+    const player = players.filter((checkPlayer: IPlayer) => checkPlayer.uid === playerId)[0];
+    const newPlayer = Object.assign({}, player, { life: 40, poisonCounters: 0, commanderDamage: [] });
+
+    conn.updatePlayer(newPlayer);
+  };
+
+  resetRoom = (): void => {
+    const { room } = this.state;
+    room?.players.forEach((playerId: string) => {
+      this.resetPlayer(playerId);
+    });
+    const newRoom = Object.assign({}, room, { timerState: { lastStart: '', history: [] } });
+    this.setState({ room: newRoom }, () => {
+      conn.updateRoom(this.state.room!);
     });
   };
 
@@ -275,6 +303,9 @@ class App extends Component<{}, IAppState> {
                 timerState={room?.timerState || { lastStart: '', history: [] }}
                 endPlayerTurn={this.endPlayerTurn}
                 returnHomeState={this.returnHomeState}
+                useShotClock={room?.useShotClock || false}
+                toggleUseShotClock={this.toggleUseShotClock}
+                resetRoom={this.resetRoom}
               />
             )}
           />
@@ -308,6 +339,7 @@ class App extends Component<{}, IAppState> {
                 updatePlayerState={this.updatePlayerState}
                 updateRoomState={this.updateRoomState}
                 updateRoomId={this.updateRoomId}
+                resetPlayer={this.resetPlayer}
               />
             )}
           />

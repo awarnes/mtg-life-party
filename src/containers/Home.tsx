@@ -12,21 +12,16 @@ import Grid from '@material-ui/core/Grid';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import Typography from '@material-ui/core/Typography';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import { Autocomplete } from '@material-ui/lab';
 
 import { IHomeState, IHomeProps, ICommander } from '../lib/mtgLifeInterfaces';
-import { colorStyles } from '../lib/mtgLifeConstants';
+import { colorStyles, CreatePlayerField } from '../lib/mtgLifeConstants';
 import { parseQuery } from '../lib/utilities';
-
 import { DPlayer } from '../data/DPlayer';
 import commanderData from '../data/commanderData.json';
-
-export enum CreatePlayerField {
-  name = 'name',
-  commander = 'commander',
-  partnerCommander = 'partnerCommander',
-  deckListLink = 'deckListLink',
-}
 
 const styles = {
   homeContainer: {
@@ -72,6 +67,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       deckListLinkValid: true,
       roomToJoinShortIdValid: true,
       roomToJoinShortId: shortId ? shortId.room : '',
+      willUseShotClock: false,
     };
   }
 
@@ -161,8 +157,9 @@ class Home extends Component<IHomeProps, IHomeState> {
   };
 
   handleCreateNewRoom = async (): Promise<void> => {
-    const { player } = this.state;
+    const { player, willUseShotClock } = this.state;
     if (!this.isValid(false)) return;
+
     const newPlayer = new DPlayer(
       player.name,
       player.life,
@@ -173,7 +170,12 @@ class Home extends Component<IHomeProps, IHomeState> {
       player.colorTheme,
       player.deckListLink,
     );
-    const roomId = await this.props.createRoom(newPlayer);
+
+    const newRoomSettings = {
+      willUseShotClock,
+    };
+
+    const roomId = await this.props.createRoom(newPlayer, newRoomSettings);
     this.props.history.push(`/room/${roomId}`);
   };
 
@@ -280,8 +282,12 @@ class Home extends Component<IHomeProps, IHomeState> {
     );
   };
 
+  toggleWillUseShotClock = (): void => {
+    this.setState({ willUseShotClock: !this.state.willUseShotClock });
+  };
+
   render(): JSX.Element {
-    const { newModal, joinModal, roomToJoinShortId, roomToJoinShortIdValid } = this.state;
+    const { newModal, joinModal, roomToJoinShortId, roomToJoinShortIdValid, willUseShotClock } = this.state;
     const { classes } = this.props;
     return (
       <div className={classes.homeContainer}>
@@ -314,6 +320,20 @@ class Home extends Component<IHomeProps, IHomeState> {
           <DialogContent>
             <DialogContentText>Please enter your display name and commander name.</DialogContentText>
             {this.createPlayer(true)}
+            <DialogContentText>New Room Options:</DialogContentText>
+            <FormControl component="fieldset">
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={willUseShotClock}
+                    onChange={this.toggleWillUseShotClock}
+                    name="shotClock"
+                    color="primary"
+                  />
+                }
+                label="Use Shot Clock?"
+              />
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button

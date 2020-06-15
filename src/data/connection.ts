@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/';
 import { db } from './Firebase';
 
+import { IRoomSettings } from '../lib/mtgLifeInterfaces';
 import { DPlayer, playerConverter } from './DPlayer';
 import { DRoom, roomConverter } from './DRoom';
 
@@ -60,13 +61,15 @@ export function updatePlayer(player: DPlayer): Promise<void> {
 //   return count;
 // }
 
-export async function createRoom(): Promise<string> {
+export async function createRoom(settings: IRoomSettings): Promise<string> {
   const newRoom = await db.collection('rooms').doc();
   await db
     .collection('rooms')
     .withConverter(roomConverter)
     .doc(newRoom.id)
-    .set(new DRoom(getRoomShortId(newRoom.id), newRoom.id, [], { lastStart: '', history: [] }));
+    .set(
+      new DRoom(getRoomShortId(newRoom.id), newRoom.id, [], { lastStart: '', history: [] }, settings.willUseShotClock),
+    );
 
   return newRoom.id;
 }

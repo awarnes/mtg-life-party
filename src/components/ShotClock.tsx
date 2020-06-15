@@ -8,12 +8,6 @@ const styles = {
   shotClock: {},
 };
 
-const TYPOGRAPHY_VARIANT: any = {
-  h4: 'h4',
-  h5: 'h5',
-  h6: 'h6',
-};
-
 function ShotClock(props: IShotClockProps): JSX.Element {
   const { classes, timerState, endPlayerTurn } = props;
   const [seconds, setSeconds] = useState(0);

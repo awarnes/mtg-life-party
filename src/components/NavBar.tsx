@@ -1,7 +1,23 @@
-import React from 'react';
-import { AppBar, Toolbar, IconButton, Button, withStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+  withStyles,
+} from '@material-ui/core';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import HomeIcon from '@material-ui/icons/Home';
+import SettingsIcon from '@material-ui/icons/Settings';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 
 import { INavBarProps } from '../lib/mtgLifeInterfaces';
 import { getRoomShortId } from '../lib/utilities';
@@ -26,7 +42,19 @@ const styles = {
 };
 
 function NavBar(props: INavBarProps): JSX.Element {
-  const { currentRoom, classes, returnHome, handleSnackbarToggle, timerState, endPlayerTurn } = props;
+  const {
+    currentRoom,
+    classes,
+    returnHome,
+    handleSnackbarToggle,
+    timerState,
+    endPlayerTurn,
+    useShotClock,
+    toggleUseShotClock,
+    resetRoom,
+  } = props;
+  const [roomSettingsOpen, setRoomSettingsOpen] = useState(false);
+  const [resetRoomCheckOpen, setResetRoomCheckOpen] = useState(false);
 
   const handleCopy = (): void => {
     const { currentRoom } = props;
@@ -39,6 +67,48 @@ function NavBar(props: INavBarProps): JSX.Element {
     handleSnackbarToggle('Copied!');
   };
 
+  const toggleRoomSettings = (): void => {
+    setRoomSettingsOpen(!roomSettingsOpen);
+  };
+
+  const toggleResetWarning = (): void => {
+    setResetRoomCheckOpen(!resetRoomCheckOpen);
+  };
+
+  const roomSettings = function (): JSX.Element {
+    return (
+      <div>
+        <FormControl component="fieldset">
+          <FormGroup>
+            <FormControlLabel
+              control={<Switch checked={useShotClock} onChange={toggleUseShotClock} name="shotClock" color="primary" />}
+              label="Shot Clock"
+            />
+            {currentRoom ? (
+              <Button onClick={handleCopy} variant="contained" size="large" startIcon={<FileCopyIcon />}>
+                Copy Link
+              </Button>
+            ) : null}
+            <Button
+              onClick={(): void => setResetRoomCheckOpen(!resetRoomCheckOpen)}
+              variant="outlined"
+              color="secondary"
+              startIcon={<RotateLeftIcon />}
+            >
+              Reset Room
+            </Button>
+          </FormGroup>
+        </FormControl>
+      </div>
+    );
+  };
+
+  const handleResetRoom = function (): void {
+    toggleResetWarning();
+    toggleRoomSettings();
+    resetRoom();
+  };
+
   return (
     <div className={classes.navBarContainer}>
       <AppBar position="fixed">
@@ -46,16 +116,34 @@ function NavBar(props: INavBarProps): JSX.Element {
           <IconButton color="inherit" onClick={returnHome}>
             <HomeIcon />
           </IconButton>
-          {currentRoom ? <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} /> : null}
-          {currentRoom ? (
-            <Button onClick={handleCopy} variant="contained" size="large" endIcon={<FileCopyIcon />}>
-              Room: {currentRoom}
-            </Button>
-          ) : (
-            <div />
-          )}
+          {currentRoom && useShotClock ? <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} /> : null}
+          <IconButton color="inherit" onClick={toggleRoomSettings}>
+            <SettingsIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
+
+      <Dialog open={roomSettingsOpen} onClose={toggleRoomSettings} aria-labelledby="room-options-title">
+        <DialogTitle id="room-options-title">Room Settings</DialogTitle>
+        <DialogContent>{roomSettings()}</DialogContent>
+        <DialogActions>
+          <Button onClick={toggleRoomSettings} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={resetRoomCheckOpen} onClose={toggleResetWarning}>
+        <DialogTitle>Are you sure you want to reset the room?</DialogTitle>
+        <DialogActions>
+          <Button color="secondary" onClick={handleResetRoom}>
+            Continue
+          </Button>
+          <Button onClick={toggleResetWarning} color="primary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

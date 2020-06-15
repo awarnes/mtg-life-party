@@ -40,3 +40,10 @@ export enum CounterType {
 export const DNDItemTypes = {
   CARD: 'playerCard',
 };
+
+export enum CreatePlayerField {
+  name = 'name',
+  commander = 'commander',
+  partnerCommander = 'partnerCommander',
+  deckListLink = 'deckListLink',
+}

@@ -76,6 +76,7 @@ class Room extends Component<IRoomProps, IRoomState> {
       createNewCommanderDamage,
       updatePlayerColor,
       deletePlayer,
+      resetPlayer,
     } = this.props;
 
     const commandersInRoom = players.flatMap((player) =>
@@ -102,6 +103,7 @@ class Room extends Component<IRoomProps, IRoomState> {
             createNewCommanderDamage={createNewCommanderDamage}
             updatePlayerColor={updatePlayerColor}
             deletePlayer={deletePlayer}
+            resetPlayer={resetPlayer}
           />
         ))
       : [];

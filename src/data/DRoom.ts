@@ -5,12 +5,14 @@ class DRoom implements IRoom {
   roomId: string;
   players: string[];
   timerState: ITimer;
+  useShotClock: boolean;
 
-  constructor(roomShortId: string, roomId: string, players: string[], timerState: ITimer) {
+  constructor(roomShortId: string, roomId: string, players: string[], timerState: ITimer, useShotClock: boolean) {
     this.roomShortId = roomShortId;
     this.roomId = roomId;
     this.players = players;
     this.timerState = timerState;
+    this.useShotClock = useShotClock;
   }
 }
 
@@ -22,11 +24,12 @@ const roomConverter = {
       roomId: room.roomId,
       players: room.players,
       timerState: room.timerState,
+      useShotClock: room.useShotClock,
     };
   },
   fromFirestore: (snapshot: any, options: any): DRoom => {
     const data = snapshot.data(options);
-    return new DRoom(data.roomShortId, data.roomId, data.players, data.timerState);
+    return new DRoom(data.roomShortId, data.roomId, data.players, data.timerState, data.useShotClock);
   },
 };
 

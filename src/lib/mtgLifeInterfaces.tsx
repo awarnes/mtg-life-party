@@ -28,6 +28,11 @@ export interface IRoom {
   roomShortId: string;
   players: string[];
   timerState: ITimer;
+  useShotClock: boolean;
+}
+
+export interface IRoomSettings {
+  willUseShotClock: boolean;
 }
 
 export interface ICommanderDamage {
@@ -45,10 +50,11 @@ export interface IHomeState {
   commanderValid: boolean;
   deckListLinkValid: boolean;
   roomToJoinShortIdValid: boolean;
+  willUseShotClock: boolean;
 }
 
 export interface IHomeProps {
-  createRoom: (player: IPlayer) => void;
+  createRoom: (player: IPlayer, settings: IRoomSettings) => void;
   joinRoom: (player: IPlayer, roomToJoinShortId: string) => void;
   history: any;
   classes: any;
@@ -70,6 +76,7 @@ export interface IRoomProps {
   updateRoomState: (roomData: IRoom) => void;
   updateRoomId: (newRoomId: string) => void;
   deletePlayer: (playerId: string) => void;
+  resetPlayer: (playerId: string) => void;
   classes: any;
 }
 
@@ -97,6 +104,7 @@ export interface IPlayerCardProps {
   updatePlayerColor: (playerId?: string, color?: string) => void;
   commandersInRoom: Array<any>;
   deletePlayer: (playerId: string) => void;
+  resetPlayer: (playerId: string) => void;
 }
 
 export interface IDamageCounterProps {
@@ -131,15 +139,21 @@ export interface INavigationProps {
   endPlayerTurn: () => void;
   handleSnackbarToggle: (message?: string) => void;
   returnHomeState: () => void;
+  useShotClock: boolean;
+  toggleUseShotClock: () => void;
+  resetRoom: () => void;
 }
 
 export interface INavBarProps {
   currentRoom: string;
   classes: any;
   timerState: ITimer;
+  useShotClock: boolean;
   endPlayerTurn: () => void;
   returnHome: () => void;
   handleSnackbarToggle: (message?: string) => void;
+  toggleUseShotClock: () => void;
+  resetRoom: () => void;
 }
 
 export interface IShotClockProps {
