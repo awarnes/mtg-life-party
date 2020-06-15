@@ -321,19 +321,21 @@ class Home extends Component<IHomeProps, IHomeState> {
             <DialogContentText>Please enter your display name and commander name.</DialogContentText>
             {this.createPlayer(true)}
             <DialogContentText>New Room Options:</DialogContentText>
-            <FormControl component="fieldset">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={willUseShotClock}
-                    onChange={this.toggleWillUseShotClock}
-                    name="shotClock"
-                    color="primary"
-                  />
-                }
-                label="Use Shot Clock?"
-              />
-            </FormControl>
+            {false && (
+              <FormControl component="fieldset">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={willUseShotClock}
+                      onChange={this.toggleWillUseShotClock}
+                      name="shotClock"
+                      color="primary"
+                    />
+                  }
+                  label="Use Shot Clock?"
+                />
+              </FormControl>
+            )}
           </DialogContent>
           <DialogActions>
             <Button

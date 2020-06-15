@@ -83,10 +83,14 @@ function NavBar(props: INavBarProps): JSX.Element {
       <div>
         <FormControl component="fieldset">
           <FormGroup>
-            <FormControlLabel
-              control={<Switch checked={useShotClock} onChange={toggleUseShotClock} name="shotClock" color="primary" />}
-              label="Shot Clock"
-            />
+            {false && (
+              <FormControlLabel
+                control={
+                  <Switch checked={useShotClock} onChange={toggleUseShotClock} name="shotClock" color="primary" />
+                }
+                label="Shot Clock"
+              />
+            )}
             {currentRoom ? (
               <Button
                 onClick={handleCopy}
@@ -129,9 +133,11 @@ function NavBar(props: INavBarProps): JSX.Element {
             <HomeIcon />
           </IconButton>
           {currentRoom && useShotClock ? <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} /> : null}
-          <Button color="inherit" onClick={toggleRoomSettings} startIcon={<SettingsIcon />}>
-            Settings
-          </Button>
+          {currentRoom ? (
+            <Button color="inherit" onClick={toggleRoomSettings} startIcon={<SettingsIcon />}>
+              Settings
+            </Button>
+          ) : null}
         </Toolbar>
       </AppBar>
 

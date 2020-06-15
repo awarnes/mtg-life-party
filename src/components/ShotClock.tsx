@@ -12,7 +12,6 @@ function ShotClock(props: IShotClockProps): JSX.Element {
   const { classes, timerState, endPlayerTurn } = props;
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(timerState.history.length > 0);
-  const lastStartMoment = moment.utc(timerState.lastStart);
 
   if (timerState.history.length > 0 && !isActive) {
     setIsActive(true);
@@ -42,6 +41,7 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     if (isActive) {
       interval = setInterval(() => {
         const currentTime = moment.utc().tz(moment.tz.guess()).utc();
+        const lastStartMoment = moment.utc(timerState.lastStart);
         const timeDifference = currentTime.diff(lastStartMoment, 'seconds');
         setSeconds(timeDifference);
       }, 1000);
