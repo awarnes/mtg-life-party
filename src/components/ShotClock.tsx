@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { ButtonGroup, Button, withStyles } from '@material-ui/core';
+import { ButtonGroup, Button, withStyles, Typography } from '@material-ui/core';
 
 import { IShotClockProps } from '../lib/mtgLifeInterfaces';
 import moment from 'moment-timezone';
 
 const styles = {
   shotClock: {},
+};
+
+const TYPOGRAPHY_VARIANT: any = {
+  h4: 'h4',
+  h5: 'h5',
+  h6: 'h6',
 };
 
 function ShotClock(props: IShotClockProps): JSX.Element {
@@ -42,15 +48,27 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     const secondAmount = time - minutes * 60;
     return `${minutes}:${secondAmount < 10 ? `0${secondAmount}` : secondAmount}`;
   }
-
+  const historyLength = timerState.history.length;
   return (
     <div className={classes.shotClock}>
       <ButtonGroup>
         <Button>{displayTime(seconds)}</Button>
         <Button onClick={handleEndPlayerTurn}>{timerState.history.length > 0 ? 'End Turn' : 'Start Game'}</Button>
       </ButtonGroup>
+      {
+        <div style={{ justifyContent: 'space-between', display: 'flex' }}>
+          {timerState.history
+            .slice(historyLength - 3, historyLength)
+            .reverse()
+            .map((time: string, index: number) => (
+              <span key={`history-display-${index}`} style={{ fontSize: 24 - index * 3 }}>
+                {displayTime(Number(time))}
+              </span>
+            ))}
+        </div>
+      }
     </div>
   );
 }
-
+//variant={TYPOGRAPHY_VARIANT[`h${index + 4}`]}
 export default withStyles(styles)(ShotClock);
