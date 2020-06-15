@@ -155,8 +155,8 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
                   </Link>
                 </Tooltip>
               ) : null}
-              <Tooltip title="Options">
-                <IconButton aria-label="color settings" onClick={settingsOpenToggle}>
+              <Tooltip title="Player Settings">
+                <IconButton aria-label="player settings" onClick={settingsOpenToggle}>
                   {settingsOpen ? <CloseIcon /> : <SettingsIcon />}
                 </IconButton>
               </Tooltip>

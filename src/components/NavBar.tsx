@@ -39,6 +39,9 @@ const styles = {
     borderRadius: 4,
     backgroundColor: '#df69b4',
   },
+  formGroupButtons: {
+    margin: '4px',
+  },
 };
 
 function NavBar(props: INavBarProps): JSX.Element {
@@ -85,7 +88,14 @@ function NavBar(props: INavBarProps): JSX.Element {
               label="Shot Clock"
             />
             {currentRoom ? (
-              <Button onClick={handleCopy} variant="contained" size="large" startIcon={<FileCopyIcon />}>
+              <Button
+                onClick={handleCopy}
+                variant="contained"
+                size="large"
+                startIcon={<FileCopyIcon />}
+                // eslint-disable-next-line react/prop-types
+                className={classes.formGroupButtons}
+              >
                 Copy Link
               </Button>
             ) : null}
@@ -94,6 +104,8 @@ function NavBar(props: INavBarProps): JSX.Element {
               variant="outlined"
               color="secondary"
               startIcon={<RotateLeftIcon />}
+              // eslint-disable-next-line react/prop-types
+              className={classes.formGroupButtons}
             >
               Reset Room
             </Button>
@@ -117,9 +129,9 @@ function NavBar(props: INavBarProps): JSX.Element {
             <HomeIcon />
           </IconButton>
           {currentRoom && useShotClock ? <ShotClock timerState={timerState} endPlayerTurn={endPlayerTurn} /> : null}
-          <IconButton color="inherit" onClick={toggleRoomSettings}>
-            <SettingsIcon />
-          </IconButton>
+          <Button color="inherit" onClick={toggleRoomSettings} startIcon={<SettingsIcon />}>
+            Settings
+          </Button>
         </Toolbar>
       </AppBar>
 

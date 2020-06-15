@@ -62,10 +62,11 @@ function ShotClock(props: IShotClockProps): JSX.Element {
     return `${minutes}:${secondAmount < 10 ? `0${secondAmount}` : secondAmount}`;
   }
   const historyLength = timerState.history.length;
+
   return (
     <div className={classes.shotClock}>
       <ButtonGroup>
-        <Button>{displayTime(seconds)}</Button>
+        <Button>{seconds.toString() === 'NaN' ? '0:00' : displayTime(seconds)}</Button>
         <Button onClick={(): void => shotClockDebounce(handleEndPlayerTurn, 750)}>
           {timerState.history.length > 0 ? 'End Turn' : 'Start Game'}
         </Button>
@@ -75,11 +76,13 @@ function ShotClock(props: IShotClockProps): JSX.Element {
           {timerState.history
             .slice(historyLength - 3, historyLength)
             .reverse()
-            .map((time: string, index: number) => (
-              <span key={`history-display-${index}`} style={{ fontSize: 24 - index * 3 }}>
-                {displayTime(Number(time))}
-              </span>
-            ))}
+            .map((time: string, index: number) => {
+              return (
+                <span key={`history-display-${index}`} style={{ fontSize: 24 - index * 3 }}>
+                  {time === 'NaN' ? '' : displayTime(Number(time))}
+                </span>
+              );
+            })}
         </div>
       }
     </div>
