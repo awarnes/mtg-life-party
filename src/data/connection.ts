@@ -75,7 +75,11 @@ export async function createRoom(settings: IRoomSettings): Promise<string> {
 }
 
 export async function updateRoom(newRoom: DRoom): Promise<void> {
-  return db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId).set(newRoom);
+  db.runTransaction(async (transaction) => {
+    const roomRef = db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId);
+
+    transaction.update(roomRef, newRoom);
+  });
 }
 
 export async function getPlayer(playerUID: string): Promise<DPlayer | undefined> {

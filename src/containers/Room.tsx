@@ -44,22 +44,30 @@ class Room extends Component<IRoomProps, IRoomState> {
   }
 
   componentDidUpdate(prevProps: any): void {
-    const { playerCards } = this.state;
-    const { players } = this.props;
+    const { playerCards, turnOrder } = this.state;
+    const { players, room } = this.props;
 
     if (playerCards.length !== players.length) {
       return this.generatePlayerCards();
     }
 
     let playerChanged = false;
-    players.forEach((player: IPlayer) => {
+    players.forEach((player: IPlayer, playerIndex: number) => {
       playerChanged = playerDifference(
         player,
         prevProps.players.filter((prevPlayer: IPlayer) => prevPlayer.uid === player.uid)[0],
       );
     });
+
+    let orderChanged = false;
+    turnOrder.forEach((player: string, playerIndex: number) => {
+      orderChanged = player !== room?.players[playerIndex];
+    });
+
     if (playerChanged) {
       this.generatePlayerCards();
+    } else if (orderChanged) {
+      this.setState({ turnOrder: room?.players || [] });
     }
   }
   // TODO: Allow to only regenerate the necessary player cards from componentDidUpdate() above!

@@ -214,14 +214,11 @@ class App extends Component<{}, IAppState> {
 
   updateRoomId = async (newRoomId: string): Promise<void> => {
     const room = await conn.getRoom(newRoomId);
-    const players = await conn.getPlayers(room?.players ?? []);
-    this.setState({ players: players ?? [], room });
+    this.setState({ room });
   };
 
   updateRoomState = (newRoom: IRoom): void => {
     this.setState({ room: newRoom, roomShortId: newRoom.roomShortId }, async () => {
-      const newPlayerArray = await conn.getPlayers(this.state.room?.players ?? []);
-      this.setState({ players: newPlayerArray ?? [] });
       conn.updateRoom(newRoom);
     });
   };
