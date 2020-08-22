@@ -15,8 +15,12 @@ export async function createPlayer(player: DPlayer): Promise<string> {
   return newPlayer.id;
 }
 
-export function updatePlayer(player: DPlayer): Promise<void> {
-  return db.collection('players').withConverter(playerConverter).doc(player.uid).set(player);
+export function updatePlayer(player: DPlayer): void {
+  db.runTransaction(async (transaction) => {
+    const playerRef = db.collection('players').withConverter(playerConverter).doc(player.uid);
+
+    transaction.update(playerRef, player);
+  });
 }
 
 // function createCounter(ref, num_shards) {
@@ -74,7 +78,7 @@ export async function createRoom(settings: IRoomSettings): Promise<string> {
   return newRoom.id;
 }
 
-export async function updateRoom(newRoom: DRoom): Promise<void> {
+export function updateRoom(newRoom: DRoom): void {
   db.runTransaction(async (transaction) => {
     const roomRef = db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId);
 
@@ -171,13 +175,9 @@ export function listenToRoom(roomId: string, roomStateUpdateCallback: Function):
   }
 }
 
-export function listenToPlayer(playerId: string, playerStateUpdateCallback: Function): void {
-  db.collection('players')
-    .doc(playerId)
-    .onSnapshot((snapshot) => playerStateUpdateCallback(snapshot.data()));
-}
-
 export async function listenToPlayersInRoom(roomId: string, playerStateUpdateCallback: Function): Promise<void> {
+  // TODO: Can I just use the local player list rather than making a call to getRoom for the room data?
+  // Will this prevent updating properly or save on additonal DB reads?
   if (roomId) {
     const roomData = await getRoom(roomId);
     if (roomData?.players.length) {

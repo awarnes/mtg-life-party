@@ -166,3 +166,39 @@ export interface ITimer {
   lastStart: string;
   history: string[];
 }
+
+export interface ICardDisplayProps {
+  drawerOpen: boolean;
+  card: ICard;
+}
+
+export interface ICard {
+  name: string;
+  manaCost: string;
+  convertedManaCost: number;
+  type: string;
+  text: string;
+  scryfallOracleId: string;
+  scryfallIllustrationId: string;
+  power: string;
+  toughness: string;
+  loyalty: string;
+  rulingsUri: string;
+  leadershipSkills: ILegalities;
+}
+
+export interface ILegalities {
+  standard: string;
+  future: string;
+  historic: string;
+  pioneer: string;
+  modern: string;
+  legacy: string;
+  pauper: string;
+  vintage: string;
+  penny: string;
+  commander: string;
+  brawl: string;
+  duel: string;
+  oldschool: string;
+}

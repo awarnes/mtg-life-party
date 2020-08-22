@@ -68,6 +68,7 @@ class Home extends Component<IHomeProps, IHomeState> {
       roomToJoinShortIdValid: true,
       roomToJoinShortId: shortId ? shortId.room : '',
       willUseShotClock: false,
+      drawerOpen: false,
     };
   }
 
@@ -216,10 +217,9 @@ class Home extends Component<IHomeProps, IHomeState> {
           getOptionLabel={(commander: ICommander): string => commander.name!}
           value={player.commander}
           onChange={(_: any, newValue: any): void => this.handleUpdatePlayer(CreatePlayerField.commander, newValue)}
-          renderInput={(params) => (
+          renderInput={(params): JSX.Element => (
             <TextField
               margin="dense"
-              id="commander-input"
               label="Commander"
               type="text"
               error={!commanderValid}
@@ -245,11 +245,10 @@ class Home extends Component<IHomeProps, IHomeState> {
                 onChange={(_: any, newValue: any): void =>
                   this.handleUpdatePlayer(CreatePlayerField.partnerCommander, newValue)
                 }
-                renderInput={(params) => (
+                renderInput={(params): JSX.Element => (
                   <TextField
                     autoFocus
                     margin="dense"
-                    id="partner-commander-input"
                     label="Partner Commander"
                     type="text"
                     error={!commanderValid}
