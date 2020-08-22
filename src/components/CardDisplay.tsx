@@ -25,9 +25,7 @@ export default function CardDisplay(props: ICardDisplayProps) {
           >
             <Typography>Rulings</Typography>
           </AccordionSummary>
-          <AccordionDetails>
-            <CardRulings rulingsUri={card.rulingsUri} />
-          </AccordionDetails>
+          <AccordionDetails>{/* <CardRulings rulingsUri={card.rulingsUri} /> */}</AccordionDetails>
         </Accordion>
       </CardContent>
     </Card>
