@@ -51,6 +51,7 @@ export interface IHomeState {
   deckListLinkValid: boolean;
   roomToJoinShortIdValid: boolean;
   willUseShotClock: boolean;
+  drawerOpen: boolean;
 }
 
 export interface IHomeProps {

@@ -29,6 +29,17 @@ class Card {
     return this.scryfallOracleId === otherCard.scryfallOracleId;
   }
 
+  isCommander() {
+    return this.leadershipSkills && this.leadershipSkills.commander;
+  }
+
+  getCommanderData() {
+    return {
+      name: this.name,
+      scryfallOracleId: this.scryfallOracleId,
+    };
+  }
+
   toObject() {
     return {
       name: this.name,
@@ -102,16 +113,21 @@ console.log(`Retrieved ${totalCards} cards!`);
 const allCardOutput = [];
 let actuallyProcessed = 0;
 const allNameOutput = [];
+const allCommanderOutput = [];
 
 for (const card of allCardsSet) {
   actuallyProcessed += 1;
   allNameOutput.push(card.name);
   allCardOutput.push(card.toObject());
+  if (card.isCommander()) {
+    allCommanderOutput.push(card.getCommanderData());
+  }
 }
 
 console.log(`Processed ${actuallyProcessed} cards!`);
-fs.writeFileSync('./src/data/allCards.json', JSON.stringify(allCardOutput));
-fs.writeFileSync('./src/data/allNames.json', JSON.stringify(allNameOutput));
+// fs.writeFileSync('./src/data/allCards.json', JSON.stringify(allCardOutput));
+// fs.writeFileSync('./src/data/allNames.json', JSON.stringify(allNameOutput));
+fs.writeFileSync('./src/data/commanderData.json', JSON.stringify(allCommanderOutput));
 
 // May not work :/ needs auth?
 //  `https://img.scryfall.com/cards/large/front/b/d/${scryfallIllustrationId}.jpg`
