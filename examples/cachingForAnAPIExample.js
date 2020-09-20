@@ -4,7 +4,10 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { query: '', hits: [] };
+    this.state = {
+      query: '',
+      hits: [],
+    };
   }
 
   onChange = (event) => {
@@ -41,7 +44,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>Search Hacker News with Local Storage</h1>
-        <p>There shouldn't be a second network request, when you search for a keyword twice.</p>
+        <p>There shouldnt be a second network request, when you search for a keyword twice.</p>
 
         {/* Search Input */}
         <form onSubmit={this.onSearch}>
@@ -50,9 +53,9 @@ class App extends React.Component {
         </form>
 
         {/* Result */}
-        {this.state.hits.map((item) => (
+        {/* {this.state.hits.map((item) => (
           <div key={item.objectID}>{item.title}</div>
-        ))}
+        ))} */}
       </div>
     );
   }

@@ -224,7 +224,6 @@ class Home extends Component<IHomeProps, IHomeState> {
               type="text"
               error={!commanderValid}
               helperText="Please enter a commander."
-              fullWidth
               {...params}
             />
           )}
@@ -253,7 +252,6 @@ class Home extends Component<IHomeProps, IHomeState> {
                     type="text"
                     error={!commanderValid}
                     helperText="Please enter a partner commander."
-                    fullWidth
                     {...params}
                   />
                 )}

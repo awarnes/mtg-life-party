@@ -219,11 +219,9 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
                     renderInput={(params) => (
                       <TextField
                         margin="dense"
-                        id="commander-input"
                         label="Commander"
                         type="text"
                         helperText="Please enter a commander."
-                        fullWidth
                         {...params}
                       />
                     )}
@@ -254,11 +252,9 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
                             <TextField
                               autoFocus
                               margin="dense"
-                              id="partner-commander-input"
                               label="Partner Commander"
                               type="text"
                               helperText="Please enter a partner commander."
-                              fullWidth
                               {...params}
                             />
                           )}
