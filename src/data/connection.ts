@@ -78,12 +78,23 @@ export async function createRoom(settings: IRoomSettings): Promise<string> {
   return newRoom.id;
 }
 
-export function updateRoom(newRoom: DRoom): void {
-  db.runTransaction(async (transaction) => {
-    const roomRef = db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId);
+export async function getRoom(roomUID: string): Promise<DRoom | undefined> {
+  const room = await db.collection('rooms').doc(roomUID).withConverter(roomConverter).get();
 
+  if (room.exists) {
+    return room.data();
+  } else {
+    throw Error('Room does not exist!');
+  }
+}
+
+export async function updateRoom(newRoom: DRoom): Promise<DRoom | undefined> {
+  await db.runTransaction(async (transaction) => {
+    const roomRef = db.collection('rooms').withConverter(roomConverter).doc(newRoom.roomId);
     transaction.update(roomRef, newRoom);
   });
+
+  return await getRoom(newRoom.roomId);
 }
 
 export async function getPlayer(playerUID: string): Promise<DPlayer | undefined> {
@@ -110,16 +121,6 @@ export async function getPlayers(playerUIDArray: string[]): Promise<DPlayer[] | 
       return players;
     });
   return playerArray;
-}
-
-export async function getRoom(roomUID: string): Promise<DRoom | undefined> {
-  const room = await db.collection('rooms').doc(roomUID).withConverter(roomConverter).get();
-
-  if (room.exists) {
-    return room.data();
-  } else {
-    throw Error('Room does not exist!');
-  }
 }
 
 export async function getRoomByShortId(roomShortId: string): Promise<DRoom | undefined> {

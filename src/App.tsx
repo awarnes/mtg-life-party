@@ -219,7 +219,8 @@ class App extends Component<{}, IAppState> {
 
   updateRoomState = (newRoom: IRoom): void => {
     this.setState({ room: newRoom, roomShortId: newRoom.roomShortId }, async () => {
-      conn.updateRoom(newRoom);
+      const updatedRoom = await conn.updateRoom(newRoom);
+      this.setState({ room: updatedRoom });
     });
   };
 

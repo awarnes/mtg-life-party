@@ -46,7 +46,6 @@ class Room extends Component<IRoomProps, IRoomState> {
   componentDidUpdate(prevProps: any): void {
     const { playerCards, turnOrder } = this.state;
     const { players, room } = this.props;
-
     if (playerCards.length !== players.length) {
       return this.generatePlayerCards();
     }
@@ -139,29 +138,37 @@ class Room extends Component<IRoomProps, IRoomState> {
     const { classes, room } = this.props;
 
     return (
-      <DndProvider backend={HTML5Backend}>
-        <div style={{ flexWrap: 'wrap' }} className={classes.roomContainer}>
-          {turnOrder.length ? (
-            turnOrder.map((cardId: string, droppableIndex: number) => {
-              const playerCard = playerCards.filter((card: any) => cardId === card.key)[0];
-              const activeTurn =
-                (room?.timerState.history.length || 0) % turnOrder.length === droppableIndex &&
-                !!room?.timerState.lastStart!;
-              return (
-                <RoomDraggableSpace
-                  key={`drop-space-${droppableIndex}`}
-                  playerCard={playerCard}
-                  droppableId={droppableIndex}
-                  activeTurn={activeTurn}
-                  movePlayer={this.movePlayer}
-                />
-              );
-            })
-          ) : (
-            <Typography variant="h2">Whoops, looks like this room is empty!</Typography>
-          )}
-        </div>
-      </DndProvider>
+      <div style={{ flexWrap: 'wrap' }} className={classes.roomContainer}>
+        {turnOrder.length ? (
+          turnOrder.map((cardId: string) => playerCards.filter((card: any) => cardId === card.key)[0])
+        ) : (
+          <Typography variant="h2">Whoops, looks like this room is empty!</Typography>
+        )}
+      </div>
+
+      // <DndProvider backend={HTML5Backend}>
+      //   <div style={{ flexWrap: 'wrap' }} className={classes.roomContainer}>
+      //     {turnOrder.length ? (
+      //       turnOrder.map((cardId: string, droppableIndex: number) => {
+      //         const playerCard = playerCards.filter((card: any) => cardId === card.key)[0];
+      //         const activeTurn =
+      //           (room?.timerState.history.length || 0) % turnOrder.length === droppableIndex &&
+      //           !!room?.timerState.lastStart!;
+      //         return (
+      //           <RoomDraggableSpace
+      //             key={`drop-space-${droppableIndex}`}
+      //             playerCard={playerCard}
+      //             droppableId={droppableIndex}
+      //             activeTurn={activeTurn}
+      //             movePlayer={this.movePlayer}
+      //           />
+      //         );
+      //       })
+      //     ) : (
+      //       <Typography variant="h2">Whoops, looks like this room is empty!</Typography>
+      //     )}
+      //   </div>
+      // </DndProvider>
     );
   }
 }

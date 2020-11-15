@@ -74,9 +74,9 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
     resetPlayer,
   } = props;
 
-  const [, drag] = useDrag({
-    item: { type: DNDItemTypes.CARD, key: player.uid },
-  });
+  // const [, drag] = useDrag({
+  //   item: { type: DNDItemTypes.CARD, key: player.uid },
+  // });
 
   // Color picker state
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -136,7 +136,8 @@ function PlayerCard(props: IPlayerCardProps): JSX.Element {
   }
 
   return (
-    <div ref={drag}>
+    <div>
+      {/* <div ref={drag}> */}
       <Card raised className={classes.cardContainer}>
         <CardHeader
           avatar={
